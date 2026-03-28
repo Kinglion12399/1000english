@@ -251,23 +251,50 @@
     }
 
     function grade(g) {
-      const now = Date.now();
-      if (current.status === 'new') { current.status = 'learning'; current.step = 0; }
-      
-      current.totalReviews++;
-      
-      if (g === 'again') { current.lapses++; current.next = now + 60000; }
-      else if (g === 'hard') { current.next = now + 600000; }
-      else if (g === 'good') { current.correctCount++; current.reps++; current.next = now + 86400000; }
-      else if (g === 'easy') { current.correctCount++; current.reps++; current.next = now + 259200000; }
-      
-      if (current.reps >= 5) current.status = 'done';
-      
-      state.queue.shift();
+  const now = Date.now();
+  
+  if (current.status === 'new') { 
+    current.status = 'learning'; 
+    current.step = 0; 
+  }
+  
+  current.totalReviews++;
+  
+  if (g === 'again') { 
+    current.lapses++; 
+    current.next = now + 60000; // 1 минута
+    
+    // 🔥 ДОБАВЛЯЕМ СЛОВО ОБРАТНО В ОЧЕРЕДЬ ЧЕРЕЗ 1 МИНУТУ
+    setTimeout(() => {
+      state.queue.push(current);
       save();
-      updateStats();
-      showCard();
-    }
+    }, 60000);
+  }
+  else if (g === 'hard') { 
+    current.next = now + 600000; // 10 минут
+    setTimeout(() => {
+      state.queue.push(current);
+      save();
+    }, 600000);
+  }
+  else if (g === 'good') { 
+    current.correctCount++; 
+    current.reps++; 
+    current.next = now + 86400000; // 1 день
+  }
+  else if (g === 'easy') { 
+    current.correctCount++; 
+    current.reps++; 
+    current.next = now + 259200000; // 3 дня
+  }
+  
+  if (current.reps >= 5) current.status = 'done';
+  
+  state.queue.shift();
+  save();
+  updateStats();
+  showCard();
+}
 
     function updateStats() {
       document.getElementById('newC').textContent = state.words.filter(w => w.status === 'new').length;

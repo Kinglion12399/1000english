@@ -256,41 +256,57 @@
   if (current.status === 'new') { 
     current.status = 'learning'; 
     current.step = 0; 
+    current.created = now;
   }
   
   current.totalReviews++;
+  current.lastReview = now;
   
   if (g === 'again') { 
     current.lapses++; 
-    current.next = now + 60000; // 1 минута
+    current.step = 0;
+    current.next = now + 60000;
     
-    // 🔥 ДОБАВЛЯЕМ СЛОВО ОБРАТНО В ОЧЕРЕДЬ ЧЕРЕЗ 1 МИНУТУ
-    setTimeout(() => {
-      state.queue.push(current);
-      save();
-    }, 60000);
+    // 🔥 СРАЗУ добавляем слово в конец очереди (через 3-5 слов)
+    state.queue.push(current);
   }
   else if (g === 'hard') { 
-    current.next = now + 600000; // 10 минут
-    setTimeout(() => {
-      state.queue.push(current);
-      save();
-    }, 600000);
+    current.step = Math.min(current.step + 1, 3);
+    current.ease = Math.max(1.3, current.ease - 0.2);
+    current.next = now + 600000;
+    state.queue.push(current);
   }
   else if (g === 'good') { 
-    current.correctCount++; 
-    current.reps++; 
+    current.correctCount++;
+    if (current.status === 'learning') {
+      current.step++;
+      if (current.step >= 4) {
+        current.status = 'review';
+        current.reps++;
+      }
+    } else {
+      current.reps++;
+    }
     current.next = now + 86400000; // 1 день
+    if (current.reps >= 10) current.status = 'done';
   }
   else if (g === 'easy') { 
-    current.correctCount++; 
-    current.reps++; 
+    current.correctCount++;
+    if (current.status === 'learning') {
+      current.status = 'review';
+      current.reps++;
+      current.ease += 0.1;
+    } else {
+      current.reps++;
+      current.ease += 0.15;
+    }
     current.next = now + 259200000; // 3 дня
+    if (current.reps >= 10) current.status = 'done';
   }
   
-  if (current.reps >= 5) current.status = 'done';
-  
+  // Удаляем текущее слово из начала очереди
   state.queue.shift();
+  
   save();
   updateStats();
   showCard();

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English 1000</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:12px;color:#333;padding-bottom:80px}
+    .container{max-width:500px;margin:0 auto}
+    .header{background:white;border-radius:16px;padding:16px;margin-bottom:12px;text-align:center}
+    .header h1{color:#667eea;font-size:22px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+    .stat{background:white;border-radius:12px;padding:10px 6px;text-align:center}
+    .stat-v{font-size:20px;font-weight:bold;color:#667eea}
+    .stat-l{font-size:10px;color:#666;margin-top:2px}
+    .card{background:white;border-radius:16px;padding:24px;min-height:280px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-bottom:12px}
+    .word{font-size:32px;font-weight:700;margin-bottom:12px;text-align:center}
+    .trans{font-size:22px;color:#667eea;margin:12px 0;text-align:center;display:none}
+    .ex{font-size:15px;color:#666;font-style:italic;text-align:center;margin-top:12px;padding:12px;background:#f5f5f5;border-radius:8px;display:none;width:100%}
+    .empty{text-align:center;padding:40px 20px;color:#666}
+    .btn{padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:8px}
+    .btn-show{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
+    .btn-again{background:#f44336;color:white}
+    .btn-hard{background:#ff9800;color:white}
+    .btn-good{background:#4CAF50;color:white}
+    .btn-easy{background:#9C27B0;color:white}
+    .btn-danger{background:#f44336;color:white}
+    .grades{display:none;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px;width:100%}
+    .grades.show{display:grid}
+    .controls{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+    .control-btn{padding:10px 14px;border:none;border-radius:10px;font-size:13px;cursor:pointer;background:white}
+    .control-btn.active{background:#667eea;color:white}
+    .session-info{background:rgba(255,255,255,.9);border-radius:8px;padding:8px 12px;margin-bottom:12px;text-align:center;font-size:13px}
+    .menu{position:fixed;top:12px;right:12px;background:white;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer}
+    .debug{position:fixed;bottom:100px;right:12px;background:#f44336;color:white;border:none;border-radius:50%;width:44px;height:44px;font-size:18px;cursor:pointer}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;box-shadow:0 -2px 10px rgba(0,0,0,.1);padding:8px 12px;display:flex;justify-content:space-around}
+    .nav-item{display:flex;flex-direction:column;align-items:center;padding:8px 16px;border:none;background:none;cursor:pointer;color:#999;font-size:11px}
+    .nav-item.active{color:#667eea}
+    .filters{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+    .filter{padding:8px 14px;border:none;border-radius:20px;font-size:12px;cursor:pointer;background:white}
+    .filter.active{background:#667eea;color:white}
+    .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;justify-content:center;align-items:flex-end}
+    .modal.show{display:flex}
+    .modal-c{background:white;border-radius:20px 20px 0 0;padding:24px;width:100%;max-height:80vh;overflow-y:auto}
+    .setting{margin-bottom:16px}
+    .setting-l{font-size:14px;color:#666;margin-bottom:6px}
+    .setting-i{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:8px}
+    .close{background:#667eea;color:white;border:none;padding:14px;border-radius:12px;font-size:16px;width:100%;margin-top:8px}
+    .danger{background:#f44336;color:white;border:none;padding:14px;border-radius:12px;font-size:16px;width:100%;margin-top:12px}    .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:white;padding:12px 24px;border-radius:24px;opacity:0;transition:opacity.3s}
+    .toast.show{opacity:1}
+  </style>
+</head>
+<body>
+  <button class="menu" onclick="openMenu()">⚙️</button>
+  <button class="debug" onclick="hardReset()" title="Полный сброс">🔄</button>
+  
+  <div class="container">
+    <div class="header"><h1>🇬 English 1000</h1></div>
+    
+    <div class="stats">
+      <div class="stat"><div class="stat-v" id="newC">0</div><div class="stat-l">Новых</div></div>
+      <div class="stat"><div class="stat-v" id="learnC">0</div><div class="stat-l">Обучение</div></div>
+      <div class="stat"><div class="stat-v" id="reviewC">0</div><div class="stat-l">Повтор</div></div>
+      <div class="stat"><div class="stat-v" id="doneC">0</div><div class="stat-l">Выучено</div></div>
+    </div>
+    
+    <div class="session-info" id="sessionInfo">Загрузка...</div>
+    
+    <div class="controls">
+      <button class="control-btn active" onclick="setDir('en-ru',this)">EN→RU</button>
+      <button class="control-btn" onclick="setDir('ru-en',this)">RU→EN</button>
+      <button class="control-btn" onclick="setDir('random',this)">🎲</button>
+      <button class="control-btn" onclick="speak()">🔊</button>
+    </div>
+    
+    <div class="card">
+      <div class="empty" id="emptyState">
+        <div style="font-size:64px;margin-bottom:16px">🎉</div>
+        <h2>Отлично!</h2>
+        <p>Все слова изучены</p>
+        <button class="btn btn-danger" onclick="hardReset()" style="margin-top:16px">🔄 Начать заново</button>
+      </div>
+      <div id="cardContent" style="display:none;width:100%">
+        <div class="word" id="wordText"></div>
+        <div class="trans" id="transText"></div>
+        <div class="ex" id="exText"></div>
+      </div>
+    </div>
+    
+    <button class="btn btn-show" id="showBtn" onclick="showAnswer()">👁️ Показать ответ</button>
+    <div class="grades" id="gradeBtns">
+      <button class="btn btn-again" onclick="grade('again')">🔴 Снова</button>
+      <button class="btn btn-hard" onclick="grade('hard')">🟠 Трудно</button>
+      <button class="btn btn-good" onclick="grade('good')">🟢 Хорошо</button>
+      <button class="btn btn-easy" onclick="grade('easy')">🟣 Легко</button>
+    </div>
+    
+    <div id="reviewTab" style="display:none">      <div class="filters">
+        <button class="filter active" onclick="setFilter('all',this)">Все</button>
+        <button class="filter" onclick="setFilter('problem',this)">⚠️ Проблемные</button>
+        <button class="filter" onclick="setFilter('random',this)">🎲 Случайные</button>
+      </div>
+      <button class="btn btn-show" onclick="startReview()">▶️ Начать</button>
+    </div>
+  </div>
+  
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('learn',this)"><div>📚</div><div>Учить</div></button>
+    <button class="nav-item" onclick="switchTab('review',this)"><div>🔁</div><div>Повторить</div></button>
+    <button class="nav-item" onclick="showStats()"><div>📊</div><div>Статистика</div></button>
+  </div>
+  
+  <div class="modal" id="settingsModal">
+    <div class="modal-c">
+      <h3 style="text-align:center;margin-bottom:16px">⚙️ Настройки</h3>
+      <div class="setting"><div class="setting-l">Новых слов в день:</div><input type="number" class="setting-i" id="newPerDay" value="10"></div>
+      <button class="close" onclick="saveSettings()">💾 Сохранить</button>
+      <button class="btn" style="background:#f5f5f5" onclick="exportData()">📤 Экспорт</button>
+      <button class="btn" style="background:#f5f5f5" onclick="document.getElementById('importFile').click()">📥 Импорт</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="danger" onclick="hardReset()">🗑️ Полный сброс</button>
+      <button class="close" onclick="closeMenu()" style="background:#999;margin-top:8px">✖️</button>
+    </div>
+  </div>
+  
+  <div class="modal" id="statsModal">
+    <div class="modal-c">
+      <h3 style="text-align:center;margin-bottom:16px">📊 Статистика</h3>
+      <div id="statsContent"></div>
+      <button class="close" onclick="closeStats()">✖️ Закрыть</button>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // === БАЗА СЛОВ (сокращённая для надёжности) ===
+    const WORDS = [
+      ["able","способный","I am able to do it"],["about","о","Tell me about yourself"],["above","над","Above the table"],["accept","принимать","I accept"],["across","через","Across the street"],["act","действовать","Act now"],["actually","на самом деле","Actually no"],["add","добавлять","Add sugar"],["admit","признавать","I admit"],["afraid","испуганный","I'm afraid"],["after","после","After lunch"],["afternoon","день","Good afternoon"],["again","снова","Again please"],["against","против","Against me"],["age","возраст","Your age?"],["ago","назад","Days ago"],["agree","соглашаться","I agree"],["ah","ах","Ah I see"],["ahead","впереди","Go ahead"],["air","воздух","Fresh air"],["all","все","All people"],["allow","позволять","Allow me"],["almost","почти","Almost ready"],["alone","один","Alone here"],["along","вдоль","Along road"],["already","уже","Already done"],["alright","хорошо","Alright"],["also","также","Me also"],["although","хотя","Although hard"],["always","всегда","Always late"],["am","являюсь","I am happy"],["amaze","удивлять","You amaze"],["an","один","An apple"],["and","и","You and me"],["anger","гнев","His anger"],["angry","злой","Don't angry"],["animal","животное","Nice animal"],["annoy","раздражать","Don't annoy"],["another","другой","Another way"],["answer","ответ","The answer"],["any","любой","Any question"],["anymore","больше","Not anymore"],["anyone","кто-либо","Anyone here"],["anything","что-либо","Anything ok"],["anyway","в любом случае","Anyway go"],["apartment","квартира","My apartment"],["apparently","по-видимому","Apparently yes"],["appear","появляться","He appears"],["approach","приближаться","Approach care"],["are","являетесь","You are"],["area","область","This area"],["aren't","не являетесь","Aren't you"],["arm","рука","My arm"],["around","вокруг","Look around"],["arrive","прибывать","Arrive soon"],["as","как","As I say"],["ask","спрашивать","Ask him"],["asleep","спящий","Baby asleep"],["ass","осёл","Don't ass"],["at","в","At station"],["attack","атаковать","Dog attack"],["attempt","пытаться","Good attempt"],["attention","внимание","Pay attention"],["aunt","тётя","My aunt"],["avoid","избегать","Avoid mistakes"],["away","прочь","Go away"],["baby","младенец","Baby cries"],["back","спина","Come back"],["bad","плохой","Bad idea"],["bag","сумка","My bag"],["ball","мяч","Kick ball"],["band","группа","Music band"],["bar","бар","At bar"],["barely","едва","Barely see"],["bathroom","ванная","In bathroom"],["be","быть","To be"],["beat","бить","Don't beat"],["beautiful","красивый","Beautiful girl"],["became","стал","Became doctor"],["because","потому что","Because love"],["become","становиться","Become better"],["bed","кровать","Go bed"],["bedroom","спальня","My bedroom"],["been","был","Been there"],["before","до","Before eating"],["began","начал","Began late"],["begin","начинать","Begin now"],["behind","позади","Behind sofa"],["believe","верить","I believe"],["bell","звонок","Bell rings"],["beside","рядом","Beside me"],["besides","кроме","Besides that"],["best","лучший","Best day"],["better","лучше","Feel better"],["between","между","Between us"],["big","большой","Big house"],["bit","кусочек","Wait bit"],["bite","кусать","Dog bite"],["black","чёрный","Black coffee"],["blink","моргать","Don't blink"],["block","квартал","One block"],["blonde","блондин","She blonde"],["blood","кровь","I see blood"],["blue","синий","Blue sky"],["blush","краснеть","She blush"],["body","тело","My body"],["book","книга","Read book"],["bore","скучать","Don't bore"],["both","оба","Both good"],["bother","беспокоить","Don't bother"],["bottle","бутылка","Water bottle"],["bottom","дно","Touch bottom"],["box","коробка","Open box"],["boy","мальчик","Nice boy"],["boyfriend","парень","My boyfriend"],["brain","мозг","Use brain"],["break","ломать","Don't break"],["breakfast","завтрак","Eat breakfast"],["breath","дыхание","Hold breath"],["breathe","дышать","Breathe deep"],["bright","яркий","Bright sun"],["bring","приносить","Bring me"],["broke","сломал","Broke window"],["broken","сломанный","Phone broken"],["brother","брат","My brother"],["brought","принёс","Brought cake"],["brown","коричневый","Brown shoes"],["brush","чистить","Brush teeth"],["build","строить","Build house"],["burn","гореть","Fire burns"],["burst","лопнуть","Balloon burst"],["bus","автобус","Take bus"],["business","бизнес","On business"],["busy","занятой","I'm busy"],["but","но","But failed"],["buy","покупать","Buy car"],["by","у","By him"],["call","звонить","Call me"],["calm","спокойный","Stay calm"],["came","пришёл","Came here"],["can","мочь","I can"],["can't","не могу","I can't"],["car","машина","My car"],["card","карта","ID card"],["care","забота","Take care"],["carefully","осторожно","Drive carefully"],["carry","нести","Carry this"],["case","случай","In case"],["cat","кошка","Cat sleeps"],["catch","ловить","Catch ball"],["caught","поймал","Caught cold"],["cause","причина","The cause"],["cell","телефон","Cell phone"],["chair","стул","Sit chair"],["chance","шанс","Give chance"],["change","менять","Change clothes"],["chase","преследовать","Don't chase"],["check","проверять","Check email"],["cheek","щека","On cheek"],["chest","грудь","My chest"],["child","ребёнок","Good child"],["children","дети","Children play"],["chuckle","хихикать","He chuckle"],["city","город","Big city"],["class","класс","Class starts"],["clean","чистый","Keep clean"],["clear","ясный","Water clear"],["climb","лезть","Climb up"],["close","закрывать","Close door"],["clothes","одежда","Put clothes"],["coffee","кофе","Need coffee"],["cold","холодный","It's cold"],["college","колледж","Go college"],["color","цвет","Favorite color"],["come","приходить","Come here"],["comment","комментарий","No comment"],["complete","завершать","Complete it"],["completely","полностью","Completely agree"],["computer","компьютер","Use computer"],["concern","беспокоить","Don't concern"],["confuse","путать","Don't confuse"],["consider","рассматривать","Consider this"],["continue","продолжать","Continue work"],["control","контролировать","Control it"],["conversation","разговор","Long talk"],["cool","крутой","That's cool"],["corner","угол","Turn corner"],["couch","диван","On couch"],["could","мог","I could"],["couldn't","не мог","Couldn't sleep"],["counter","стойка","At counter"],["couple","пара","Couple mins"],["course","курс","Of course"],["cover","покрывать","Cover mouth"],["crack","трещина","Wall crack"],["crazy","сумасшедший","You crazy"],["cross","пересекать","Cross street"],["crowd","толпа","Avoid crowd"],["cry","плакать","Don't cry"],["cup","чашка","Cup of tea"],["cut","резать","Cut it"],["cute","милый","Cute dog"],["dad","папа","My dad"],["damn","чёрт","Oh damn"],["dance","танцевать","Let's dance"],["dark","тёмный","It's dark"],["date","дата","What date"],["daughter","дочь","My daughter"],["day","день","Nice day"],["dead","мёртвый","Battery dead"],["deal","сделка","It's deal"],["dear","дорогой","Dear friend"],["death","смерть","Fear death"],["decide","решать","Decide now"],["deep","глубокий","Very deep"],["definitely","определённо","Definitely yes"],["desk","стол","At desk"],["did","делал","Did you"],["didn't","не делал","Didn't know"],["die","умирать","Flowers die"],["different","разный","We different"],["dinner","ужин","Eat dinner"],["direction","направление","Which way"],["disappear","исчезать","It disappears"],["do","делать","Do it"],["doctor","врач","See doctor"],["does","делает","Does he"],["doesn't","не делает","Doesn't matter"],["dog","собака","My dog"],["don't","не делай","Don't touch"],["done","сделано","I'm done"],["door","дверь","Close door"],["doubt","сомнение","I doubt"],["down","вниз","Sit down"],["drag","тащить","Don't drag"],["draw","рисовать","Draw it"],["dream","мечта","I dream"],["dress","платье","Wear dress"],["drink","пить","Drink water"],["drive","водить","Can drive"],["drop","ронять","Don't drop"],["drove","вел","Drove fast"],["dry","сухой","It's dry"],["during","во время","During film"],["each","каждый","Each one"],["ear","ухо","My ear"],["early","ранний","Wake early"],["easily","легко","Easily done"],["easy","легкий","It's easy"],["eat","есть","Let's eat"],["edge","край","On edge"],["either","либо","Either or"],["else","ещё","Who else"],["empty","пустой","Box empty"],["end","конец","The end"],["enjoy","наслаждаться","Enjoy it"],["enough","достаточно","Enough"],["enter","входить","Enter room"],["entire","весь","Entire day"],["escape","сбегать","Try escape"],["especially","особенно","Especially this"],["even","даже","Even I"],["evening","вечер","Good evening"],["eventually","в итоге","Eventually yes"],["ever","когда-либо","Ever been"],["every","каждый","Every day"],["everyone","все","Everyone here"],["everything","всё","Everything ok"],["exactly","точно","Exactly"],["except","кроме","Except John"],["excite","волновать","It excites"],["exclaim","воскликнуть","She exclaims"],["excuse","извинять","Excuse me"],["expect","ожидать","I expect"],["explain","объяснять","Explain it"],["expression","выражение","His face"],["eye","глаз","My eye"],["eyebrow","бровь","Raise brow"],["face","лицо","Your face"],["fact","факт","It's fact"],["fall","падать","Leaves fall"],["family","семья","My family"],["far","далёкий","Is far"],["fast","быстрый","Run fast"],["father","отец","My father"],["fault","вина","Not fault"],["favorite","любимый","Favorite"],["fear","страх","No fear"],["feel","чувствовать","How feel"],["feet","ноги","My feet"],["fell","упал","He fell"],["felt","чувствовал","I felt"],["few","немного","Few friends"],["field","поле","In field"],["fight","драться","Don't fight"],["figure","понимать","I figure"],["fill","заполнять","Fill it"],["finally","наконец","Finally"],["find","находить","Find it"],["fine","хороший","I'm fine"],["finger","палец","My finger"],["finish","заканчивать","Finish it"],["fire","огонь","No fire"],["first","первый","First time"],["fit","подходить","It fits"],["five","пять","Five dollars"],["fix","чинить","Fix it"],["flash","вспышка","Flash light"],["flip","переворот","Flip coin"],["floor","пол","On floor"],["fly","летать","Birds fly"],["focus","фокус","Focus here"],["follow","следовать","Follow me"],["food","еда","I love food"],["foot","нога","My foot"],["for","для","For you"],["force","сила","Don't force"],["forget","забывать","Don't forget"],["form","форма","Fill form"],["forward","вперёд","Go forward"],["found","нашёл","Found it"],["four","четыре","Four seasons"],["free","свободный","I'm free"],["friend","друг","My friend"],["from","от","From here"],["front","перед","In front"],["frown","хмуриться","Don't frown"],["fuck","(грубо)","Fuck it"],["full","полный","I'm full"],["fun","веселье","It's fun"],["funny","смешной","So funny"],["further","дальше","No further"],["game","игра","Play game"],["gasp","задыхаться","She gasps"],["gave","дал","Gave me"],["gaze","взгляд","His gaze"],["gently","нежно","Touch gently"],["get","получать","Get up"],["giggle","хихикать","She giggles"],["girl","девочка","Nice girl"],["girlfriend","девушка","My girl"],["give","давать","Give me"],["given","данный","Given that"],["glad","рад","I'm glad"],["glance","взгляд","Take glance"],["glare","смотреть","He glares"],["glass","стакан","Glass water"],["go","идти","Let's go"],["God","Бог","Thank God"],["gone","ушёл","He's gone"],["gonna","собираться","I'm gonna"],["good","хороший","Good job"],["got","получил","I got"],["gotten","получен","Gotten better"],["grab","хватать","Grab it"],["great","великий","Great!"],["green","зелёный","Green grass"],["greet","приветствовать","Greet her"],["grey","серый","Grey sky"],["grin","улыбка","He grins"],["grip","хватка","Lose grip"],["groan","стонать","He groans"],["ground","земля","On ground"],["group","группа","My group"],["grow","расти","Plants grow"],["guard","охранник","The guard"],["guess","гадать","Guess what"],["gun","пистолет","No gun"],["guy","парень","That guy"],["had","имел","I had"],["hadn't","не имел","Hadn't seen"],["hair","волосы","My hair"],["half","половина","Half cake"],["hall","зал","In hall"],["hallway","коридор","Down hall"],["hand","рука","Give hand"],["handle","справляться","Handle it"],["hang","висеть","Hang it"],["happen","случаться","What happened"],["happy","счастливый","Be happy"],["hard","трудно","Work hard"],["has","имеет","He has"],["hate","ненавидеть","I hate"],["have","иметь","I have"],["haven't","не имею","Haven't seen"],["he","он","He is"],["he'd","он бы","He'd do"],["he's","он есть","He's here"],["head","голова","My head"],["hear","слышать","I hear"],["heard","слышал","I heard"],["heart","сердце","My heart"],["heavy","тяжёлый","It's heavy"],["held","держал","Held hand"],["hell","ад","What hell"],["hello","привет","Hello"],["help","помощь","Help me"],["her","её","Give her"],["here","здесь","Come here"],["herself","себя","She herself"],["hey","эй","Hey you"],["hi","привет","Hi there"],["hide","прятать","Hide it"],["high","высокий","Very high"],["him","его","Tell him"],["himself","себя","He himself"],["his","его","His book"],["hit","ударить","Don't hit"],["hold","держать","Hold on"],["home","дом","Go home"],["hope","надежда","I hope"],["horse","лошадь","Ride horse"],["hospital","больница","In hospital"],["hot","горячий","It's hot"],["hour","час","One hour"],["house","дом","My house"],["how","как","How are"],["however","однако","However"],["hug","обнимать","Give hug"],["huge","огромный","Huge mistake"],["huh","а?","Huh what"],["human","человек","I'm human"],["hundred","сто","Hundred bucks"],["hung","повесил","Hung it"],["hurry","спешить","Hurry up"],["hurt","болеть","Does hurt"],["I","я","I am"],["I'd","я бы","I'd like"],["I'll","я буду","I'll go"],["I'm","я есть","I'm here"],["I've","я имею","I've seen"],["ice","лёд","Ice cold"],["idea","идея","Good idea"],["if","если","If you"],["ignore","игнорировать","Don't ignore"],["imagine","представлять","Imagine"],["immediately","немедленно","Do it"],["important","важный","It's important"],["in","в","Come in"],["inside","внутри","Go inside"],["instead","вместо","Go instead"],["interest","интерес","No interest"],["interrupt","перебивать","Don't interrupt"],["into","внутрь","Go into"],["is","является","It is"],["isn't","не является","It isn't"],["it","оно","It is"],["it's","это есть","It's time"],["its","его","Its tail"],["jacket","куртка","My jacket"],["jeans","джинсы","My jeans"],["jerk","придурок","Don't jerk"],["job","работа","Good job"],["join","присоединяться","Join us"],["joke","шутка","Just joke"],["jump","прыгать","Jump up"],["just","только","I just"],["keep","хранить","Keep it"],["kept","хранил","Kept secret"],["key","ключ","My key"],["kick","пинать","Don't kick"],["kid","ребёнок","Nice kid"],["kill","убивать","Don't kill"],["kind","добрый","He's kind"],["kiss","поцелуй","Give kiss"],["kitchen","кухня","In kitchen"],["knee","колено","My knee"],["knew","знал","I knew"],["knock","стучать","Knock door"],["know","знать","I know"],["known","известный","Well known"],["lady","леди","The lady"],["land","земля","On land"],["large","большой","Large size"],["last","последний","Last one"],["late","поздний","Don't late"],["laugh","смеяться","Laugh out"],["lay","класть","Lay down"],["lead","вести","Lead us"],["lean","опираться","Lean on"],["learn","учить","Learn it"],["least","наименьший","At least"],["leave","уходить","Leave it"],["led","вёл","Led us"],["left","левый","Turn left"],["leg","нога","My leg"],["less","меньше","Less sugar"],["let","позволять","Let me"],["letter","письмо","Write letter"],["lie","лгать","Don't lie"],["life","жизнь","My life"],["lift","поднимать","Lift it"],["light","свет","Turn light"],["like","нравиться","I like"],["line","линия","Stand line"],["lip","губа","My lip"],["listen","слушать","Listen"],["little","маленький","Little bit"],["live","жить","I live"],["lock","замок","Lock door"],["locker","шкафчик","My locker"],["long","длинный","Long time"],["look","смотреть","Look here"],["lose","терять","Don't lose"],["lost","потерянный","I'm lost"],["lot","множество","Thanks lot"],["loud","громкий","Don't loud"],["love","любовь","I love"],["low","низкий","Speak low"],["lunch","обед","Eat lunch"],["mad","злой","Don't mad"],["made","сделал","Made it"],["make","делать","Make it"],["man","мужчина","The man"],["manage","управлять","Can manage"],["many","много","Many people"],["mark","метка","Mark it"],["marry","жениться","Marry me"],["match","совпадать","Match this"],["matter","значение","No matter"],["may","может","May I"],["maybe","может","Maybe later"],["me","меня","Give me"],["mean","значить","What mean"],["meant","значил","Meant it"],["meet","встречать","Nice meet"],["memory","память","Good memory"],["men","мужчины","The men"],["mention","упоминать","Don't mention"],["met","встретил","Met her"],["middle","середина","In middle"],["might","мог","It might"],["mind","разум","Never mind"],["mine","мой","It's mine"],["minute","минута","One minute"],["mirror","зеркало","In mirror"],["miss","скучать","I miss"],["mom","мама","My mom"],["moment","момент","One moment"],["money","деньги","No money"],["month","месяц","Next month"],["mood","настроение","Good mood"],["more","больше","Want more"],["morning","утро","Good morning"],["most","большинство","Most people"],["mother","мать","My mother"],["mouth","рот","Open mouth"],["move","двигать","Move it"],["movie","фильм","Watch movie"],["Mr.","мистер","Mr. Smith"],["Mrs.","миссис","Mrs. Jones"],["much","много","Too much"],["mum","мама","My mum"],["mumble","бормотать","Don't mumble"],["music","музыка","Love music"],["must","должен","I must"],["mutter","бормотать","He mutters"],["my","мой","My car"],["myself","себя","I myself"],["name","имя","Your name"],["near","близко","Is near"],["nearly","почти","Nearly done"],["neck","шея","My neck"],["need","нуждаться","I need"],["nervous","нервный","Don't nervous"],["never","никогда","Never give"],["new","новый","New day"],["next","следующий","Next week"],["nice","приятный","Nice meet"],["night","ночь","Good night"],["no","нет","No problem"],["nod","кивать","Nod head"],["noise","шум","Too noise"],["none","никто","None left"],["normal","нормальный","It's normal"],["nose","нос","My nose"],["not","не","I'm not"],["note","заметка","Take note"],["nothing","ничто","Nothing"],["notice","замечать","Did notice"],["now","сейчас","Do now"],["number","номер","My number"],["obviously","очевидно","Obviously"],["of","из","Cup of"],["off","выкл","Turn off"],["offer","предлагать","Offer help"],["office","офис","Go office"],["often","часто","Often go"],["oh","о","Oh I see"],["okay","хорошо","Okay"],["old","старый","How old"],["on","на","On table"],["once","однажды","Once upon"],["one","один","One apple"],["only","только","Only you"],["onto","на","Onto bed"],["open","открыть","Open door"],["or","или","Tea or"],["order","порядок","Order food"],["other","другой","Other day"],["our","наш","Our house"],["out","наружу","Go out"],["outside","снаружи","Wait outside"],["over","над","Game over"],["own","собственный","My own"],["pack","упаковать","Pack bags"],["pain","боль","No pain"],["paint","краска","Paint wall"],["pair","пара","Pair of"],["pants","брюки","My pants"],["paper","бумага","On paper"],["parents","родители","My parents"],["park","парк","In park"],["part","часть","Part of"],["party","вечеринка","Have party"],["pass","передать","Pass salt"],["past","прошлое","In past"],["pause","пауза","Pause it"],["pay","платить","Pay bill"],["people","люди","Many people"],["perfect","идеальный","Perfect"],["perhaps","возможно","Perhaps"],["person","человек","One person"],["phone","телефон","My phone"],["pick","выбрать","Pick one"],["picture","картинка","Take pic"],["piece","кусок","Piece of"],["pink","розовый","Pink color"],["piss","(грубо)","Piss off"],["place","место","Nice place"],["plan","план","My plan"],["play","играть","Play it"],["please","пожалуйста","Please sit"],["pocket","карман","In pocket"],["point","точка","Good point"],["police","полиция","Call police"],["pop","хлопать","Pop it"],["position","позиция","Take pos"],["possible","возможный","Is possible"],["power","сила","Power up"],["practically","практически","Practically"],["present","подарок","Here present"],["press","нажать","Press button"],["pretend","притворяться","Don't pretend"],["pretty","симпатичный","Pretty good"],["probably","вероятно","Probably"],["problem","проблема","No problem"],["promise","обещать","I promise"],["pull","тянуть","Pull it"],["punch","удар","Don't punch"],["push","толкать","Push it"],["put","класть","Put it"],["question","вопрос","Ask question"],["quick","быстрый","Be quick"],["quickly","быстро","Run quickly"],["quiet","тихий","Be quiet"],["quietly","тихо","Speak quietly"],["quite","довольно","Quite good"],["race","гонка","Win race"],["rain","дождь","It rains"],["raise","поднять","Raise hand"],["ran","бежал","Ran fast"],["rang","звонил","Phone rang"],["rather","скорее","Rather not"],["reach","достигать","Reach it"],["read","читать","Read it"],["ready","готовый","I'm ready"],["real","реальный","Is real"],["realize","понимать","I realize"],["really","действительно","Really"],["reason","причина","The reason"],["recognize","узнавать","I recognize"],["red","красный","Red car"],["relationship","отношения","Good rel"],["relax","расслабиться","Relax"],["remain","оставаться","Remain"],["remember","помнить","Remember"],["remind","напомнить","Remind me"],["repeat","повторять","Repeat it"],["reply","отвечать","Reply me"],["respond","реагировать","Respond"],["rest","отдых","Take rest"],["return","вернуть","Return it"],["ride","ехать","Ride bike"],["right","правильный","You right"],["ring","кольцо","Ring bell"],["road","дорога","On road"],["rock","камень","Rock music"],["roll","катить","Roll it"],["room","комната","My room"],["rose","роза","Red rose"],["round","круглый","Round table"],["rub","тереть","Rub hands"],["run","бежать","Run fast"],["rush","спешить","Don't rush"],["sad","грустный","Don't sad"],["safe","безопасный","Stay safe"],["said","сказал","He said"],["same","тот же","Same here"],["sat","сидел","He sat"],["save","спасти","Save it"],["saw","видел","I saw"],["say","говорить","Say it"],["scare","пугать","Don't scare"],["school","школа","Go school"],["scream","кричать","Don't scream"],["search","искать","Search it"],["seat","место","Take seat"],["second","второй","One second"],["see","видеть","I see"],["seem","казаться","You seem"],["seen","виден","Have seen"],["self","самость","Myself"],["send","отправить","Send it"],["sense","чувство","Makes sense"],["sent","отправлен","I sent"],["serious","серьёзный","Be serious"],["seriously","серьёзно","Seriously"],["set","набор","Set it"],["settle","уладить","Settle down"],["seven","семь","Seven days"],["several","несколько","Several"],["shadow","тень","In shadow"],["shake","трясти","Shake hands"],["share","делить","Share it"],["she","она","She is"],["she'd","она бы","She'd like"],["she's","она есть","She's here"],["shift","смена","Night shift"],["shirt","рубашка","My shirt"],["shit","(грубо)","Oh shit"],["shock","шок","It's shock"],["shoe","ботинок","My shoe"],["shook","тряс","He shook"],["shop","магазин","Go shop"],["short","короткий","Short hair"],["shot","выстрел","One shot"],["should","должен","You should"],["shoulder","плечо","My shoulder"],["shouldn't","не должен","Shouldn't"],["shout","кричать","Don't shout"],["shove","толкать","Don't shove"],["show","показать","Show me"],["shower","душ","Take shower"],["shrug","пожать","He shrugs"],["shut","закрыть","Shut up"],["sick","больной","I'm sick"],["side","сторона","On side"],["sigh","вздыхать","He sighs"],["sight","зрение","At sight"],["sign","знак","Sign here"],["silence","тишина","Silence"],["silent","тихий","Stay silent"],["simply","просто","Simply do"],["since","с тех","Since then"],["single","одинокий","Single room"],["sir","сэр","Yes sir"],["sister","сестра","My sister"],["sit","сидеть","Sit down"],["situation","ситуация","Bad situ"],["six","шесть","Six o'clock"],["skin","кожа","My skin"],["sky","небо","Blue sky"],["slam","хлопнуть","Don't slam"],["sleep","спать","Go sleep"],["slightly","слегка","Slightly"],["slip","скользить","Don't slip"],["slow","медленный","Slow down"],["slowly","медленно","Walk slow"],["small","маленький","Small one"],["smell","запах","Smell it"],["smile","улыбка","Smile please"],["smirk","ухмылка","He smirks"],["smoke","дым","No smoke"],["snap","щёлкать","Snap it"],["so","так","So what"],["soft","мягкий","Soft pillow"],["softly","мягко","Speak soft"],["some","некоторый","Some people"],["somehow","как-то","Somehow"],["someone","кто-то","Someone"],["something","что-то","Something"],["sometimes","иногда","Sometimes"],["somewhere","где-то","Somewhere"],["son","сын","My son"],["song","песня","Sing song"],["soon","скоро","See soon"],["sorry","извини","I'm sorry"],["sort","сортировать","Sort it"],["sound","звук","Sounds good"],["space","космос","Outer space"],["speak","говорить","Speak up"],["spend","тратить","Spend time"],["spent","потратил","Spent money"],["spoke","говорил","He spoke"],["spot","пятно","Spot on"],["stair","ступенька","Up stairs"],["stand","стоять","Stand up"],["star","звезда","Look star"],["stare","смотреть","Don't stare"],["start","начать","Start now"],["state","состояние","State it"],["stay","остаться","Stay here"],["step","шаг","Take step"],["stick","палка","Stick it"],["still","всё ещё","Still waiting"],["stomach","желудок","My stomach"],["stood","стоял","He stood"],["stop","остановить","Stop it"],["store","магазин","Go store"],["story","история","Tell story"],["straight","прямо","Go straight"],["strange","странный","Strange"],["street","улица","On street"],["strong","сильный","Stay strong"],["struggle","бороться","Struggle"],["stuck","застрял","I'm stuck"],["student","студент","I'm student"],["study","учиться","Study hard"],["stuff","вещи","My stuff"],["stupid","глупый","Don't stupid"],["such","такой","Such day"],["suck","отстой","It sucks"],["sudden","внезапный","Sudden"],["suddenly","внезапно","Suddenly"],["suggest","предложить","Suggest"],["summer","лето","Hot summer"],["sun","солнце","The sun"],["suppose","предполагать","I suppose"],["sure","уверенный","I'm sure"],["surprise","удивление","Surprise"],["surround","окружать","Surround"],["sweet","сладкий","Sweet dreams"],["table","стол","Set table"],["take","брать","Take it"],["taken","взятый","It's taken"],["talk","говорить","Talk to"],["tall","высокий","He's tall"],["teacher","учитель","My teacher"],["team","команда","My team"],["tear","слеза","Wipe tear"],["teeth","зубы","Brush teeth"],["tell","рассказать","Tell me"],["ten","десять","Ten mins"],["than","чем","Than before"],["thank","благодарить","Thank you"],["that","тот","That is"],["that's","это есть","That's it"],["the","артикль","The end"],["their","их","Their house"],["them","их","Give them"],["themselves","сами","They themselves"],["then","затем","And then"],["there","там","Over there"],["there's","там есть","There's one"],["these","эти","These books"],["they","они","They are"],["they'd","они бы","They'd like"],["they're","они есть","They're here"],["thick","толстый","Thick book"],["thing","вещь","One thing"],["think","думать","Think it"],["third","третий","Third time"],["this","этот","This is"],["those","те","Those cars"],["though","хотя","Though hard"],["thought","думал","I thought"],["three","три","Three cats"],["threw","бросил","He threw"],["throat","горло","My throat"],["through","сквозь","Walk through"],["throw","бросать","Throw it"],["tie","галстук","Tie shoes"],["tight","тугой","Hold tight"],["time","время","What time"],["tiny","крошечный","Tiny house"],["tire","шина","I'm tired"],["to","к","Go to"],["today","сегодня","Today is"],["together","вместе","Together"],["told","сказал","He told"],["tomorrow","завтра","See tomorrow"],["tone","тон","Watch tone"],["tongue","язык","My tongue"],["tonight","сегодня","Tonight"],["too","слишком","Me too"],["took","взял","I took"],["top","верх","Top of"],["totally","полностью","Totally"],["touch","трогать","Don't touch"],["toward","к","Toward me"],["town","город","Small town"],["track","трек","On track"],["trail","тропа","Follow trail"],["train","поезд","Catch train"],["tree","дерево","Climb tree"],["trip","поездка","Nice trip"],["trouble","неприятность","In trouble"],["true","правда","True story"],["trust","доверять","Trust me"],["truth","правда","Tell truth"],["try","пытаться","Try again"],["turn","повернуть","Turn around"],["TV","телевизор","Watch TV"],["twenty","двадцать","Twenty years"],["two","два","Two dogs"],["type","тип","Type it"],["uncle","дядя","My uncle"],["under","под","Under table"],["understand","понимать","I understand"],["until","до","Until then"],["up","вверх","Stand up"],["upon","на","Upon time"],["us","нас","Join us"],["use","использовать","Use it"],["usual","обычный","As usual"],["usually","обычно","Usually"],["very","очень","Very good"],["visit","посетить","Visit me"],["voice","голос","Soft voice"],["wait","ждать","Wait here"],["wake","проснуться","Wake up"],["walk","гулять","Walk with"],["wall","стена","Paint wall"],["want","хотеть","I want"],["warm","тёплый","Warm welcome"],["warn","предупредить","I warn"],["was","был","It was"],["wasn't","не был","Wasn't me"],["watch","смотреть","Watch out"],["water","вода","Drink water"],["wave","волна","Wave bye"],["way","путь","This way"],["we","мы","We are"],["we'll","мы будем","We'll see"],["we're","мы есть","We're here"],["we've","мы имеем","We've done"],["wear","носить","Wear it"],["week","неделя","Next week"],["weird","странный","That's weird"],["well","хорошо","Well done"],["went","пошёл","He went"],["were","были","We were"],["weren't","не были","Weren't there"],["wet","мокрый","Don't wet"],["what","что","What is"],["what's","что есть","What's up"],["whatever","что угодно","Whatever"],["when","когда","When you"],["where","где","Where you"],["whether","ли","Know whether"],["which","который","Which one"],["while","пока","While I"],["whisper","шептать","Whisper"],["white","белый","White snow"],["who","кто","Who is"],["whole","целый","Whole day"],["why","почему","Why not"],["wide","широкий","Wide open"],["wife","жена","My wife"],["will","буду","I will"],["wind","ветер","The wind"],["window","окно","Open window"],["wipe","вытереть","Wipe it"],["wish","желать","Make wish"],["with","с","Come with"],["within","в пределах","Within hour"],["without","без","Without you"],["woke","проснулся","I woke"],["woman","женщина","She woman"],["women","женщины","Women power"],["won't","не буду","Won't do"],["wonder","интересоваться","Wonder why"],["wood","дерево","Made wood"],["word","слово","One word"],["wore","носил","He wore"],["work","работать","Hard work"],["world","мир","All world"],["worry","беспокоиться","Don't worry"],["worse","хуже","Getting worse"],["would","бы","I would"],["wouldn't","не бы","Wouldn't do"],["wow","вау","Wow amazing"],["wrap","заворачивать","Wrap it"],["write","писать","Write it"],["wrong","неправильный","Wrong"],["yeah","да","Yeah sure"],["year","год","New year"],["yell","кричать","Don't yell"],["yes","да","Yes please"],["yet","ещё","Not yet"],["you","ты","You are"],["you'd","ты бы","You'd like"],["you'll","ты будешь","You'll see"],["you're","ты есть","You're welcome"],["you've","ты имею","You've got"],["young","молодой","Young one"],["your","твой","Your turn"],["yourself","себя","Be yourself"]
+    ];
+
+    let settings = { newPerDay: 10 };
+    let state = { words: [], queue: [], lastDay: null, dir: 'en-ru', tab: 'learn' };
+    let current = null;
+
+    function init() {
+      console.log('Init started, words in DB:', WORDS.length);      load();
+      
+      if (!state.words || state.words.length === 0) {
+        console.log('No words in state, initializing...');
+        state.words = WORDS.map((w, i) => ({
+          id: i, en: w[0], ru: w[1], ex: w[2],
+          status: 'new', step: 0, next: 0, ease: 2.5,
+          reps: 0, lapses: 0, created: Date.now(),
+          lastReview: 0, totalReviews: 0, correctCount: 0
+        }));
+        console.log('Created', state.words.length, 'words');
+        save();
+      }
+      
+      checkDay();
+      prepare();
+      updateStats();
+      showCard();
+      console.log('Init complete. Queue:', state.queue.length);
+    }
+
+    function load() {
+      try {
+        const s = localStorage.getItem('e1k_final');
+        if (s) {
+          const p = JSON.parse(s);
+          if (p.state) state = { ...state, ...p.state };
+          if (p.settings) settings = { ...settings, ...p.settings };
+        }
+      } catch(e) { console.error('Load error:', e); }
+    }
+
+    function save() {
+      try {
+        localStorage.setItem('e1k_final', JSON.stringify({ state, settings }));
+      } catch(e) { console.error('Save error:', e); }
+    }
+
+    function checkDay() {
+      const today = new Date().toDateString();
+      if (state.lastDay !== today) {
+        state.lastDay = today;
+      }
+    }
+
+    function prepare() {
+      const now = Date.now();
+      state.queue = [];
+      
+      const due = state.words.filter(w => w.next <= now && w.status !== 'new' && w.status !== 'done');      state.queue.push(...due);
+      
+      const newToday = state.words.filter(w => w.status === 'learning' && w.created > new Date(state.lastDay).getTime()).length;
+      const newWords = state.words.filter(w => w.status === 'new').slice(0, settings.newPerDay - newToday);
+      state.queue.push(...newWords);
+      
+      state.queue.sort((a, b) => {
+        const p = { learning: 1, review: 2, new: 3 };
+        return p[a.status] - p[b.status];
+      });
+    }
+
+    function showCard() {
+      const empty = document.getElementById('emptyState');
+      const content = document.getElementById('cardContent');
+      const showBtn = document.getElementById('showBtn');
+      const grades = document.getElementById('gradeBtns');
+      const queue = state.tab === 'learn' ? state.queue : [];
+
+      if (!queue.length) {
+        empty.style.display = 'block';
+        content.style.display = 'none';
+        showBtn.style.display = 'none';
+        grades.classList.remove('show');
+        document.getElementById('sessionInfo').textContent = 'На сегодня всё! 🎉';
+        return;
+      }
+
+      empty.style.display = 'none';
+      content.style.display = 'block';
+      showBtn.style.display = 'block';
+      grades.classList.remove('show');
+
+      current = queue[0];
+      const dir = state.dir === 'random' ? (Math.random() > 0.5 ? 'en-ru' : 'ru-en') : state.dir;
+      
+      if (dir === 'en-ru') {
+        document.getElementById('wordText').textContent = current.en;
+        document.getElementById('transText').textContent = current.ru;
+      } else {
+        document.getElementById('wordText').textContent = current.ru;
+        document.getElementById('transText').textContent = current.en;
+      }
+      document.getElementById('exText').textContent = current.ex;
+      document.getElementById('transText').style.display = 'none';
+      document.getElementById('exText').style.display = 'none';
+      
+      document.getElementById('sessionInfo').textContent = `В очереди: ${queue.length} слов`;
+    }
+    function showAnswer() {
+      document.getElementById('transText').style.display = 'block';
+      document.getElementById('exText').style.display = 'block';
+      document.getElementById('showBtn').style.display = 'none';
+      document.getElementById('gradeBtns').classList.add('show');
+    }
+
+    function grade(g) {
+      const now = Date.now();
+      if (current.status === 'new') { current.status = 'learning'; current.step = 0; }
+      
+      current.totalReviews++;
+      
+      if (g === 'again') { current.lapses++; current.next = now + 60000; }
+      else if (g === 'hard') { current.next = now + 600000; }
+      else if (g === 'good') { current.correctCount++; current.reps++; current.next = now + 86400000; }
+      else if (g === 'easy') { current.correctCount++; current.reps++; current.next = now + 259200000; }
+      
+      if (current.reps >= 5) current.status = 'done';
+      
+      state.queue.shift();
+      save();
+      updateStats();
+      showCard();
+    }
+
+    function updateStats() {
+      document.getElementById('newC').textContent = state.words.filter(w => w.status === 'new').length;
+      document.getElementById('learnC').textContent = state.words.filter(w => w.status === 'learning').length;
+      document.getElementById('reviewC').textContent = state.words.filter(w => w.status === 'review').length;
+      document.getElementById('doneC').textContent = state.words.filter(w => w.status === 'done').length;
+    }
+
+    function setDir(d, btn) {
+      state.dir = d;
+      document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (current) showCard();
+    }
+
+    function speak() {
+      if (!current) return;
+      const u = new SpeechSynthesisUtterance(current.en);
+      u.lang = 'en-US';
+      speechSynthesis.speak(u);
+    }
+
+    function switchTab(t, btn) {
+      state.tab = t;
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));      btn.classList.add('active');
+      
+      document.getElementById('reviewTab').style.display = t === 'review' ? 'block' : 'none';
+      if (t === 'learn') { prepare(); showCard(); }
+    }
+
+    function setFilter(f, btn) {
+      document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function startReview() {
+      const words = state.words.filter(w => w.status !== 'new').sort(() => Math.random() - 0.5).slice(0, 20);
+      state.queue = words;
+      state.tab = 'learn';
+      document.querySelectorAll('.nav-item').forEach((b, i) => b.classList.toggle('active', i === 0));
+      document.getElementById('reviewTab').style.display = 'none';
+      showCard();
+    }
+
+    function openMenu() {
+      document.getElementById('newPerDay').value = settings.newPerDay;
+      document.getElementById('settingsModal').classList.add('show');
+    }
+
+    function closeMenu() {
+      document.getElementById('settingsModal').classList.remove('show');
+    }
+
+    function saveSettings() {
+      settings.newPerDay = +document.getElementById('newPerDay').value || 10;
+      save();
+      closeMenu();
+      prepare();
+      showCard();
+      showToast('Сохранено! ✅');
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify({ state, settings })], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'english1000.json';
+      a.click();
+      showToast('Экспортировано! 📤');
+    }
+
+    function importData(e) {
+      const file = e.target.files[0];
+      if (!file) return;      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          state = data.state || state;
+          settings = data.settings || settings;
+          save();
+          location.reload();
+        } catch(err) { showToast('Ошибка! ❌'); }
+      };
+      reader.readAsText(file);
+    }
+
+    function hardReset() {
+      if (confirm('🔄 Сбросить ВСЁ и начать заново?')) {
+        localStorage.removeItem('e1k_final');
+        location.reload();
+      }
+    }
+
+    function showStats() {
+      const total = state.words.length;
+      const done = state.words.filter(w => w.status === 'done').length;
+      document.getElementById('statsContent').innerHTML = `
+        <div style="text-align:center;padding:20px">
+          <div style="font-size:48px;margin-bottom:10px">📊</div>
+          <div>Всего слов: <b>${total}</b></div>
+          <div>Выучено: <b>${done}</b></div>
+          <div>Прогресс: <b>${Math.round(done/total*100)}%</b></div>
+        </div>
+      `;
+      document.getElementById('statsModal').classList.add('show');
+    }
+
+    function closeStats() {
+      document.getElementById('statsModal').classList.remove('show');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    document.getElementById('settingsModal').addEventListener('click', e => { if (e.target.id === 'settingsModal') closeMenu(); });
+    document.getElementById('statsModal').addEventListener('click', e => { if (e.target.id === 'statsModal') closeStats(); });
+
+    window.addEventListener('load', init);
+  </script></body>
+</html>

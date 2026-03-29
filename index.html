@@ -6,180 +6,451 @@
     <title>English Mastery</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
-        .app-container { max-width: 600px; margin: 0 auto; padding: 20px; min-height: 100vh; background: rgba(255,255,255,0.95); }
-        .header { text-align: center; padding: 20px 0; border-bottom: 2px solid #eee; margin-bottom: 20px; }
-        .header h1 { color: #667eea; font-size: 28px; margin-bottom: 10px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; text-align: center; }
-        .stat-number { font-size: 32px; font-weight: bold; margin-bottom: 5px; }
-        .stat-label { font-size: 12px; opacity: 0.9; }
-        .daily-goal { background: linear-gradient(135deg, #ffd54f 0%, #ffab40 100%); color: #333; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
-        .week-calendar { display: flex; justify-content: space-between; margin-top: 15px; }
-        .day-cell { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.3); font-weight: 600; font-size: 11px; }
-        .day-cell.learned { background: #4caf50; color: white; }
-        .nav-tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
-        .nav-tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: 600; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s; }
-        .nav-tab.active { color: #667eea; border-bottom-color: #667eea; }
-        .level-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
-        .level-btn { flex: 1; min-width: 80px; padding: 15px 10px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 10px; cursor: pointer; transition: all 0.3s; font-weight: 600; text-align: center; }
-        .level-btn:hover { background: #667eea; color: white; transform: translateY(-2px); }
-        .level-btn.active { background: #667eea; color: white; }
-        .level-btn.completed { border-color: #50c878; color: #50c878; }
-        .progress-bar { height: 8px; background: #e0e0e0; border-radius: 4px; margin-top: 5px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #50c878); transition: width 0.3s; }
-        .flashcard { perspective: 1000px; width: 100%; height: 300px; margin: 20px 0; }
-        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
-        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 15px; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 2px solid #eee; cursor: pointer; }
-        .flashcard-back { transform: rotateY(180deg); background: #f8f9fa; }
-        .word-display { font-size: 36px; font-weight: bold; color: #667eea; margin-bottom: 20px; }
-        .translation-display { font-size: 24px; color: #444; margin-bottom: 10px; }
-        .example-display { font-size: 16px; color: #666; font-style: italic; }
-        .audio-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; margin-top: 15px; font-size: 20px; display: flex; align-items: center; justify-content: center; z-index: 100; }
-        .answer-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .action-btn { padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.3s; }
-        .btn-forgot { background: #ef5350; color: white; }
-        .btn-medium { background: #ffa726; color: white; }
-        .btn-know { background: #66bb6a; color: white; }
-        .mode-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
-        .mode-btn { flex: 1; padding: 12px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .mode-btn.active { background: #667eea; color: white; }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+                .nav {
+            display: flex;
+            border-bottom: 2px solid #eee;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            min-width: 60px;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: none;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .level-btn {
+            background: #667eea;
+            color: white;
+            border: 2px solid #667eea;
+            padding: 15px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 100%;
+        }
+        
+        .level-btn:hover {
+            background: #764ba2;
+            border-color: #764ba2;
+        }
+        
+        .card {
+            perspective: 1000px;
+            width: 100%;
+            height: 250px;
+            margin: 20px 0;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;            width: 100%;
+            height: 100%;
+        }
+        
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #ddd;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+            background: #f8f9fa;
+        }
+        
+        .word {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .answer-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .ans-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;        }
+        
+        .btn-forgot { background: #ef5350; }
+        .btn-medium { background: #ffa726; }
+        .btn-know { background: #66bb6a; }
+        .ans-btn small { font-size: 11px; opacity: 0.85; display: block; font-weight: normal; margin-top: 2px; }
+        
         .hidden { display: none !important; }
-        .info-text { font-size: 12px; color: #666; margin-top: 10px; text-align: center; }
-        .session-section { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; }        .quiz-options { display: grid; gap: 12px; }
-        .quiz-option { padding: 15px 20px; background: white; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; font-size: 16px; text-align: center; }
-        .quiz-option:hover { border-color: #667eea; background: #f5f5f5; }
-        .quiz-option.correct { background: #c8e6c9; border-color: #4caf50; }
-        .quiz-option.wrong { background: #ffcdd2; border-color: #ef5350; }
-        .feedback-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; visibility: hidden; opacity: 0; transition: all 0.3s; }
-        .feedback-overlay.show { visibility: visible; opacity: 1; }
-        .feedback-card { background: white; padding: 40px; border-radius: 20px; text-align: center; animation: slideUp 0.5s ease; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .feedback-icon { font-size: 60px; margin-bottom: 20px; }
-        .feedback-text { font-size: 24px; font-weight: bold; margin-bottom: 15px; }
-        .reset-btn { background: #ef5350; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; width: 100%; }
-        .quiz-question { font-size: 28px; font-weight: bold; color: #667eea; margin-bottom: 30px; text-align: center; }
+        
+        .feedback {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+        }
+        
+        .feedback.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .feedback-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        select {
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        button {
+            cursor: pointer;
+        }
+        
+        section {
+            margin: 20px 0;
+        }        
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .quiz-option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            margin: 5px 0;
+        }
+        
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: #f5f5f5;
+        }
+        
+        .quiz-option.correct {
+            background: #c8e6c9;
+            border-color: #4caf50;
+        }
+        
+        .quiz-option.wrong {
+            background: #ffcdd2;
+            border-color: #ef5350;
+        }
+        
+        .audio-btn {            background: #667eea;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #50c878);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <h1>📚 English Mastery</h1>
-            <p style="color: #666;">Изучай 1000 самых важных английских слов!</p>
-        </div>
-
-        <div class="stats-grid">
+    <div class="container">
+        <h1>📚 English Mastery</h1>
+        
+        <div class="stats">
             <div class="stat-card">
-                <div class="stat-number" id="totalLearned">0</div>
-                <div class="stat-label">Выучено слов</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="currentLevel">1</div>
-                <div class="stat-label">Текущий уровень</div>
+                <div class="stat-number" id="learnedCount">0</div>
+                <div>Выучено слов</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="streakCount">0</div>
-                <div class="stat-label">🔥 Серия дней</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="accuracyRate">0%</div>
-                <div class="stat-label">Точность</div>
+                <div>Серия дней 🔥</div>
             </div>
         </div>
-
-        <div class="daily-goal">
-            <div class="stat-number" style="font-size: 18px;" id="dailyProgress">📅 Сегодня: 0/3 сессии</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="dailyProgressFill" style="width: 0%;"></div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="dailyProgressFill" style="width: 0%;"></div>
+        </div>
+        <p style="text-align: center; margin-top: 5px; color: #666;">
+            <span id="dailyProgressText">Сегодня: 0/3 сессии</span>
+        </p>
+        
+        <div class="nav">
+            <button class="nav-tab active" data-section="levels">📖 Уровни</button>
+            <button class="nav-tab" data-section="cards">💳 Карточки</button>
+            <button class="nav-tab" data-section="quiz">🎯 Тест</button>
+            <button class="nav-tab" data-section="srs">🧠 SM-2</button>
+        </div>
+        
+        <!-- СЕКЦИЯ УРОВНИ -->
+        <section id="levels" class="section">
+            <h3>Выберите уровень:</h3>
+            <select id="levelSelect">
+                <option value="1">Уровень 1 (1-200 слов)</option>
+                <option value="2">Уровень 2 (201-400 слов)</option>
+                <option value="3">Уровень 3 (401-600 слов)</option>
+                <option value="4">Уровень 4 (601-800 слов)</option>
+                <option value="5">Уровень 5 (801-1000 слов)</option>
+            </select>
+            <button class="level-btn" id="startLevelBtn">Начать изучение</button>
+            
+            <div style="margin-top:10px; padding:12px 15px; background:#e8f5e9; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+                <span>🧠 Слов к повторению (SM-2):</span>
+                <strong id="levelSrsBadge" style="color:#388e3c; font-size:18px;">0</strong>
             </div>
-            <div class="week-calendar" id="weekCalendar"></div>
-        </div>
-
-        <div class="nav-tabs">            <div class="nav-tab active" id="tabLevels">📖 Уровни</div>
-            <div class="nav-tab" id="tabCards">💳 Карточки</div>
-            <div class="nav-tab" id="tabQuiz">🎯 Тест</div>
-        </div>
-
-        <div id="levelsSection">
-            <h3>Выберите уровень для изучения:</h3>
-            <div class="level-buttons" id="levelButtons"></div>
-            <p class="info-text">Начните с уровня 1 и двигайтесь вперед.</p>
-        </div>
-
-        <div id="cardsSection" class="hidden">
+            
+            <div style="margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 10px;">
+                <strong>Статистика уровней:</strong>
+                <div id="levelStats" style="margin-top: 10px;"></div>
+            </div>
+        </section>
+        
+        <!-- СЕКЦИЯ КАРТОЧКИ -->
+        <section id="cards" class="section hidden">
             <div class="mode-toggle">
-                <button class="mode-btn active" id="modeStudy">📝 Обучение</button>
-                <button class="mode-btn" id="modeReview">🔄 Повторение</button>
+                <button class="mode-btn active" id="modeStudyBtn">📝 Новые слова</button>
+                <button class="mode-btn" id="modeReviewBtn">🔄 Повторение</button>
             </div>
-            <div class="info-text" id="studyStatus">Обучение новых слов</div>
-            <div class="info-text hidden" id="reviewStatus">Повторение слов по алгоритму SRS</div>
 
-            <div class="flashcard" id="flashcardElement">
-                <div class="flashcard-inner">
-                    <div class="flashcard-front" onclick="flipCard()">
-                        <div class="word-display" id="frontWord">word</div>
-                        <button class="audio-btn" id="audioBtn">🔊</button>
-                        <p style="margin-top: 20px; color: #999;">Нажмите для перевода</p>
+            <div style="display:flex; align-items:center; gap:10px; background:#f5f5f5; border-radius:10px; padding:10px 14px; margin-bottom:10px;">
+                <label style="font-size:13px; color:#555; white-space:nowrap;">📅 Лимит в день:</label>
+                <input type="range" id="dailyLimitRange" min="5" max="50" step="5" value="20"
+                    style="flex:1;" oninput="updateDailyLimit(this.value)">
+                <span id="dailyLimitLabel" style="font-size:14px; font-weight:bold; color:#667eea; min-width:32px; text-align:right;">20</span>
+            </div>
+            <div style="background:#e8f5e9; border-radius:8px; padding:8px 14px; font-size:13px; color:#388e3c; margin-bottom:10px;">
+                Сегодня новых: <strong id="sessionNewCountLabel">0</strong> / <strong id="sessionLimitLabel">20</strong>
+            </div>
+            
+            <div class="card" id="flashcard">
+                <div class="card-inner" id="cardInner">
+                    <div class="card-front">
+                        <div style="font-size:11px; color:#aaa; margin-bottom:6px;" id="cardDirectionBadge">EN → RU</div>
+                        <div class="word" id="frontWord">word</div>
+                        <button class="audio-btn" id="audioFront">🔊</button>
+                        <p style="margin-top:15px; color:#999;">Нажмите чтобы перевернуть</p>
                     </div>
-                    <div class="flashcard-back">
-                        <div class="translation-display" id="backTranslation">перевод</div>
-                        <div class="example-display" id="backExample">Example sentence</div>
-                        <button class="audio-btn" id="audioBtnBack">🔊</button>
+                    <div class="card-back">
+                        <div class="word" id="backTranslation">перевод</div>
+                        <div style="font-size:14px; color:#666; margin-top:10px;" id="backExample">пример</div>
+                        <button class="audio-btn" id="audioBack">🔊</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="answer-buttons hidden" id="answerButtons">
+                <button class="ans-btn btn-forgot" id="forgotBtn">❌ Забыл</button>
+                <button class="ans-btn btn-medium" id="mediumBtn">🟡 Средне</button>
+                <button class="ans-btn btn-know" id="knowBtn">✅ Знаю!</button>
+            </div>
+                        <div class="stats" style="background:#f5f5f5; padding:10px; border-radius:10px; margin-top:15px;">
+                <div><strong id="cardCounter">0/0</strong></div>
+                <div>Прогресс</div>
+            </div>
+            
+            <button class="level-btn" id="backToLevelsBtn" style="margin-top:20px;">← Назад к уровням</button>
+        </section>
+        
+        <!-- СЕКЦИЯ ТЕСТ -->
+        <section id="quiz" class="section hidden">
+            <div class="stats" style="background:#f5f5f5; padding:10px; border-radius:10px; margin:10px 0;">
+                <div><strong id="quizScore">0</strong></div>
+                <div>Очки</div>
+                <div><strong id="quizCorrect">0</strong></div>
+                <div>Верно</div>
+            </div>
+            
+            <div style="text-align:center; margin:20px 0;">
+                <div style="font-size:24px; font-weight:bold; color:#667eea;" id="quizWord">слово</div>
+                <div style="margin-top:20px;" id="quizOptionsContainer"></div>
+            </div>
+            
+            <button class="level-btn" id="newQuizBtn">Новая викторина</button>
+            <button class="level-btn" id="backToQuizBtn" style="margin-top:10px;">← Назад</button>
+        </section>
+        
+        <!-- СЕКЦИЯ SM-2 -->
+        <section id="srs" class="section hidden">
+            <div style="background:#f0f4ff; border-radius:12px; padding:15px; margin-bottom:15px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; text-align:center;">
+                    <div style="background:#667eea; color:white; border-radius:8px; padding:10px;">
+                        <div style="font-size:22px; font-weight:bold;" id="srsDueCount">0</div>
+                        <div style="font-size:12px;">К повторению</div>
+                    </div>
+                    <div style="background:#66bb6a; color:white; border-radius:8px; padding:10px;">
+                        <div style="font-size:22px; font-weight:bold;" id="srsDoneToday">0</div>
+                        <div style="font-size:12px;">Сегодня готово</div>
+                    </div>
+                    <div style="background:#ffa726; color:white; border-radius:8px; padding:10px;">
+                        <div style="font-size:22px; font-weight:bold;" id="srsTotalCards">0</div>
+                        <div style="font-size:12px;">Всего в SM-2</div>
                     </div>
                 </div>
             </div>
 
-            <div class="answer-actions hidden" id="answerActions">
-                <button class="action-btn btn-forgot" id="btnForgot">Забыл</button>
-                <button class="action-btn btn-medium" id="btnMedium">Сложное</button>
-                <button class="action-btn btn-know" id="btnKnow">Знаю!</button>
+            <div id="srsEmpty" style="text-align:center; padding:40px 20px; color:#888;">
+                <div style="font-size:48px;">🎉</div>
+                <div style="font-size:18px; font-weight:bold; margin:10px 0;">На сегодня всё!</div>
+                <div style="font-size:14px;">Слова на повторение появятся завтра.<br>Добавьте новые слова через «Карточки».</div>
             </div>
 
-            <div class="stats-grid" style="margin-top: 20px;">
-                <div class="stat-card" style="background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);">
-                    <div class="stat-number" id="cardCounter">0/0</div>
-                    <div class="stat-label">Прогресс</div>
+            <div id="srsCard" class="hidden">
+                <div style="text-align:center; color:#888; font-size:13px; margin-bottom:8px;" id="srsCounter"></div>
+
+                <div class="card" id="srsFlashcard">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="word" id="srsFrontWord">word</div>
+                            <p style="margin-top:15px; color:#999;">Нажмите чтобы перевернуть</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="word" id="srsBackTranslation">перевод</div>
+                            <div style="font-size:13px; color:#888; margin-top:8px;" id="srsNextInfo"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="answer-buttons hidden" id="srsAnswerButtons">
+                    <button class="ans-btn btn-forgot" id="srsForgotBtn">❌ Забыл<br><small>+1 день</small></button>
+                    <button class="ans-btn btn-medium" id="srsMediumBtn">🟡 Средне<br><small>+3 дня</small></button>
+                    <button class="ans-btn btn-know" id="srsKnowBtn">✅ Знаю!<br><small id="srsKnowDays"></small></button>
                 </div>
             </div>
-        </div>
 
-        <div id="quizSection" class="hidden">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">                <div class="stat-card" style="padding: 10px;">
-                    <div class="stat-number" id="quizScore" style="font-size: 24px;">0</div>
-                    <div class="stat-label" style="font-size: 10px;">Очки</div>
-                </div>
-                <div class="stat-card" style="padding: 10px;">
-                    <div class="stat-number" id="quizCorrect" style="font-size: 24px;">0</div>
-                    <div class="stat-label" style="font-size: 10px;">Верно</div>
-                </div>
+            <button class="level-btn" id="srsBackBtn" style="margin-top:20px;">← Назад к уровням</button>
+        </section>
+
+        <div class="feedback" id="feedbackOverlay" onclick="hideFeedback()">
+            <div class="feedback-box" onclick="event.stopPropagation()">
+                <div style="font-size:50px; margin-bottom:15px;" id="fbIcon">✅</div>
+                <div style="font-size:24px; font-weight:bold; margin-bottom:10px;" id="fbText">Отлично!</div>
+                <div style="color:#666;" id="fbMsg"></div>
             </div>
-
-            <div class="quiz-question" id="quizQuestion">Слово...</div>
-            <div class="quiz-options" id="quizOptions"></div>
-        </div>
-
-        <div class="session-section">
-            <div class="session-title">🕐 Время занятий сегодня</div>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="mode-btn" id="btnMorning">🌅 Утро</button>
-                <button class="mode-btn" id="btnAfternoon">☀️ День</button>
-                <button class="mode-btn" id="btnEvening">🌙 Вечер</button>
-            </div>
-        </div>
-
-        <button class="reset-btn" id="resetBtn">🗑 Сбросить весь прогресс</button>
-    </div>
-
-    <div class="feedback-overlay" id="feedbackOverlay">
-        <div class="feedback-card">
-            <div class="feedback-icon" id="feedbackIcon">✅</div>
-            <div class="feedback-text" id="feedbackText">Отлично!</div>
-            <p id="feedbackMessage" style="color: #666; font-size: 14px;"></p>
         </div>
     </div>
 
     <script>
+        // === ДАННЫЕ СЛОВ (из Excel) ===
         const WORDS = [
             "able","about","above","accept","across","act","actually","add","admit",
             "afraid","after","afternoon","again","against","age","ago","agree","ah",
@@ -192,9 +463,9 @@
             "bar","barely","bathroom","be","beat","beautiful","became","because",
             "become","bed","bedroom","been","before","began","begin","behind","believe",
             "bell","beside","besides","best","better","between","big","bit","bite",
-            "black","blink","block","blonde","blood","blue","blush","body","book",
-            "bore","both","bother","bottle","bottom","box","boy","boyfriend","brain",
-            "break","breakfast","breath","breathe","bright","bring","broke","broken",            "brother","brought","brown","brush","build","burn","burst","bus","business",
+            "black","blink","block","blonde","blood","blue","blush","body","book",            "bore","both","bother","bottle","bottom","box","boy","boyfriend","brain",
+            "break","breakfast","breath","breathe","bright","bring","broke","broken",
+            "brother","brought","brown","brush","build","burn","burst","bus","business",
             "busy","but","buy","by","call","calm","came","can","can't","car","card",
             "care","carefully","carry","case","cat","catch","caught","cause","cell",
             "chair","chance","change","chase","check","cheek","chest","child","children",
@@ -241,10 +512,10 @@
             "met","middle","might","mind","mine","minute","mirror","miss","mom",
             "moment","money","month","mood","more","morning","most","mother","mouth",
             "move","movie","Mr.","Mrs.","much","mum","mumble","music","must",
-            "mutter","my","myself","name","near","nearly","neck","need","nervous",
-            "never","new","next","nice","night","no","nod","noise","none","normal",
-            "nose","not","note","nothing","notice","now","number","obviously","of",            "off","offer","office","often","oh","okay","old","on","once","one",
-            "only","onto","open","or","order","other","out","outside","over",
+            "mutter","my","myself","name","near","nearly","neck","need","nervous",            "never","new","next","nice","night","no","nod","noise","none","normal",
+            "nose","not","note","nothing","notice","now","number","obviously","of",
+            "off","offer","office","often","oh","okay","old","on","once","one",
+            "only","onto","open","or","order","other","our","out","outside","over",
             "own","pack","pain","paint","pair","pants","paper","parents","park",
             "part","party","pass","past","pause","pay","people","perfect","perhaps",
             "person","phone","pick","picture","piece","pink","piss","place","plan",
@@ -290,705 +561,686 @@
             "wish","with","within","without","woke","woman","women","won't","wonder",
             "wood","word","wore","work","world","worry","worse","would","wouldn't",
             "wow","wrap","write","wrong","yeah","year","yell","yes","yet",
-            "you","you'd","you'll","you're","you've","young","your","yourself"
-        ];
-        const translationsDB = {
-            "able":"способный","about":"около","above":"над","accept":"принимать",
-            "across":"через","act":"действовать","actually":"на самом деле","add":"добавлять",
-            "admit":"признавать","afraid":"бояться","after":"после","afternoon":"вечер",
-            "again":"снова","against":"против","age":"возраст","ago":"назад","agree":"соглашаться",
-            "ahead":"впереди","air":"воздух","all":"весь","allow":"разрешать","almost":"почти",
-            "alone":"один","along":"вдоль","already":"уже","also":"также","although":"хотя",
-            "always":"всегда","amaze":"удивлять","an":"один","and":"и","anger":"гнев",
-            "angry":"злой","animal":"животное","annoy":"раздражать","another":"другой",
-            "answer":"ответ","any":"любой","anyone":"кто-либо","anything":"что-либо",
-            "anyway":"во всяком случае","apartment":"квартира","appear":"появляться",
-            "approach":"подходить","are":"есть (вы)","area":"область","arm":"рука",
-            "around":"вокруг","arrive":"приезжать","as":"как","ask":"спрашивать",
-            "asleep":"спящий","at":"у/в/к","attack":"атаковать","attempt":"пытаться",
-            "attention":"внимание","aunt":"тетя","avoid":"избегать","away":"далеко",
-            "baby":"малыш","back":"назад","bad":"плохой","bag":"сумка","ball":"мяч",
-            "band":"группа","bar":"бар","barely":"едва","bathroom":"ванная","be":"быть",
-            "beat":"бить","beautiful":"красивый","became":"стал","because":"потому что",
-            "become":"становиться","bed":"кровать","bedroom":"спальня","been":"был",
-            "before":"до","began":"начал","begin":"начинать","behind":"за","believe":"верить",
-            "bell":"колокол","beside":"рядом","besides":"кроме","best":"лучший",
-            "better":"лучше","between":"между","big":"большой","bit":"кусочек","bite":"кусать",
-            "black":"черный","blink":"мигать","block":"блок","blood":"кровь","blue":"синий",
-            "blush":"краснеть","body":"тело","book":"книга","both":"оба","bother":"беспокоить",
-            "bottle":"бутылка","bottom":"дно","box":"коробка","boy":"мальчик",
-            "boyfriend":"парень","brain":"мозг","break":"ломать","breakfast":"завтрак",
-            "breath":"дыхание","breathe":"дышать","bright":"яркий","bring":"приносить",
-            "brother":"брат","brought":"принес","brown":"коричневый","brush":"щетка",
-            "build":"строить","burn":"гореть","burst":"взрываться","bus":"автобус",
-            "business":"бизнес","busy":"занятый","but":"но","buy":"покупать","by":"у/через",
-            "call":"звонить","calm":"спокойный","came":"пришел","can":"могу","can't":"не могу",
-            "car":"машина","card":"карточка","care":"забота","carefully":"внимательно",
-            "carry":"нести","case":"случай","cat":"кот","catch":"ловить","caught":"пойман",
-            "cause":"причина","cell":"клетка","chair":"стул","chance":"шанс","change":"менять",
-            "chase":"гоняться","check":"проверять","cheek":"щека","chest":"грудная клетка",
-            "child":"ребенок","children":"дети","chuckle":"усмехаться","city":"город",
-            "class":"класс","clean":"чистый","clear":"ясный","climb":"подниматься",
-            "close":"закрывать","clothes":"одежда","coffee":"кофе","cold":"холодный",
-            "college":"колледж","color":"цвет","come":"приходить","comment":"комментарий",
-            "complete":"полный","completely":"полностью","computer":"компьютер","concern":"забота",
-            "confuse":"путать","consider":"думать","continue":"продолжать","control":"контроль",
-            "conversation":"разговор","cool":"крутой","corner":"угол","couch":"диван",
-            "could":"мог бы","couldn't":"не мог","counter":"счетчик","couple":"пара",
-            "course":"курс","cover":"покрывать","crack":"трещина","crazy":"безумный",
-            "cross":"переходить","crowd":"толпа","cry":"плакать","cup":"чашка","cut":"резать",
-            "cute":"милашка","dad":"папа","damn":"блин","dance":"танцевать","dark":"темный",
-            "date":"дата","daughter":"дочь","day":"день","dead":"мертвый","deal":"сделка",
-            "dear":"дорогой","death":"смерть","decide":"решать","deep":"глубокий",
-            "definitely":"определенно","desk":"стол","did":"сделал","didn't":"не делал",
-            "die":"умирать","different":"различный","dinner":"ужин","direction":"направление",            "disappear":"исчезать","do":"делать","doctor":"врач","does":"делает",
-            "doesn't":"не делает","dog":"собака","don't":"не делаю","done":"сделано",
-            "door":"дверь","doubt":"сомнение","down":"вниз","drag":"тянуть","draw":"рисовать",
-            "dream":"мечта","dress":"платье","drink":"пить","drive":"вести машину","drop":"ронять",
-            "drove":"ехал","dry":"сухой","during":"во время","each":"каждый","ear":"ухо",
-            "early":"ранний","easily":"легко","easy":"легкий","eat":"есть","edge":"край",
-            "either":"либо","else":"иначе","empty":"пустой","end":"конец","enjoy":"наслаждаться",
-            "enough":"достаточно","enter":"входить","entire":"целый","escape":"убегать",
-            "especially":"особенно","even":"даже","evening":"вечер","eventually":"в конце концов",
-            "ever":"когда-либо","every":"каждый","everyone":"все","everything":"всё",
-            "exactly":"точно","except":"кроме","excite":"волновать","exclaim":"восклицать",
-            "excuse":"извинение","expect":"ожидать","explain":"объяснять","expression":"выражение",
-            "eye":"глаз","eyebrow":"бровь","face":"лицо","fact":"факт","fall":"падать",
-            "family":"семья","far":"далеко","fast":"быстрый","father":"отец","fault":"ошибка",
-            "favorite":"любимый","fear":"страх","feel":"чувствовать","feet":"ноги","fell":"упал",
-            "felt":"почувствовал","few":"немного","field":"поле","fight":"драться","figure":"понимать",
-            "fill":"заполнять","finally":"наконец","find":"находить","fine":"хороший",
-            "finger":"палец","finish":"заканчивать","fire":"огонь","first":"первый","fit":"подходить",
-            "five":"пять","fix":"чинить","flash":"блистать","flip":"перевернуть","floor":"пол",
-            "fly":"летать","focus":"фокус","follow":"следовать","food":"еда","foot":"ступня",
-            "for":"для","force":"сила","forget":"забывать","form":"форма","forward":"вперед",
-            "found":"нашел","four":"четыре","free":"свободный","friend":"друг","from":"от",
-            "front":"перед","frown":"хмуриться","full":"полный","fun":"веселье","funny":"смешной",
-            "further":"далее","game":"игра","gave":"дал","gaze":"смотреть","gently":"нежно",
-            "get":"получать","giggle":"хохотать","girl":"девочка","girlfriend":"девушка",
-            "give":"давать","given":"данный","glad":"рад","glance":"взгляд","glare":"ярость",
-            "glass":"стакан","go":"идти","god":"Бог","gone":"ушел","gonna":"собираться",
-            "good":"хороший","got":"получил","gotten":"полученный","grab":"хватать","great":"великолепный",
-            "green":"зеленый","greet":"приветствовать","grey":"серый","grin":"улыбаться",
-            "grip":"хватать","groan":"стонать","ground":"земля","group":"группа","grow":"расти",
-            "guard":"охранять","guess":"угадывать","gun":"пушка","guy":"парень","had":"имел",
-            "hadn't":"не имел","hair":"волосы","half":"половина","hall":"холл","hand":"рука",
-            "handle":"ручка","hang":"висеть","happen":"случаться","happy":"счастливый",
-            "hard":"трудный","has":"имеет","hate":"ненавидеть","have":"иметь","haven't":"не иметь",
-            "he":"он","head":"голова","hear":"слышать","heard":"слышал","heart":"сердце",
-            "heavy":"тяжелый","held":"держал","hell":"ад","hello":"привет","help":"помощь",
-            "her":"она","here":"здесь","herself":"сама","hey":"эй","hi":"привет","hide":"прятать",
-            "high":"высокий","him":"его","himself":"сам","his":"его","hit":"ударять","hold":"держать",
-            "home":"дом","hope":"надежда","horse":"лошадь","hospital":"больница","hot":"горячий",
-            "hour":"час","house":"дом","how":"как","however":"однако","hug":"обнимать","huge":"огромный",
-            "huh":"хмм","human":"человек","hundred":"сто","hung":"повешен","hurry":"спешить",
-            "hurt":"болеть","I":"я","ice":"лед","idea":"идея","if":"если","ignore":"игнорировать",
-            "imagine":"представлять","immediately":"немедленно","important":"важный","in":"в",
-            "inside":"внутри","instead":"вместо","interest":"интерес","interrupt":"прерывать",
-            "into":"в","is":"есть","isn't":"нет","it":"это","it's":"это","its":"его",
-            "jacket":"куртка","jeans":"джинсы","jerk":"дурак","job":"работа","join":"присоединяться",
-            "joke":"шутка","jump":"прыгать","just":"только","keep":"держать","kept":"держал",
-            "key":"ключ","kick":"пинать","kid":"ребенок","kill":"убивать","kind":"вид",
-            "kiss":"целовать","kitchen":"кухня","knee":"колено","knew":"знал","knock":"стучать",
-            "know":"знать","known":"известный","lady":"леди","land":"земля","large":"большой",            "last":"последний","late":"поздний","laugh":"смеяться","lay":"класть","lead":"водить",
-            "lean":"опираться","learn":"учиться","least":"меньше всего","leave":"оставлять","led":"вел",
-            "left":"слева","leg":"нога","less":"меньше","let":"позволять","letter":"письмо",
-            "lie":"солгать","life":"жизнь","lift":"лифт","light":"свет","like":"подобный",
-            "line":"линия","lip":"губа","listen":"слушать","little":"маленький","live":"жить",
-            "lock":"замок","locker":"шкафчик","long":"долгий","look":"глядеть","lose":"терять",
-            "lost":"потерянный","lot":"много","loud":"громкий","love":"любовь","low":"низкий",
-            "lunch":"обед","mad":"сумасшедший","made":"сделанный","make":"делать","man":"мужчина",
-            "manage":"управлять","many":"много","mark":"марка","marry":"жениться","match":"спичка",
-            "matter":"вещь","may":"может быть","maybe":"возможно","me":"меня","mean":"значить",
-            "meant":"значил","meet":"встречать","memory":"память","men":"мужчины","mention":"упоминать",
-            "met":"встретился","middle":"середина","might":"может быть","mind":"разум","mine":"мой",
-            "minute":"минута","mirror":"зеркало","miss":"скучать","mom":"мама","moment":"момент",
-            "money":"деньги","month":"месяц","mood":"настроение","more":"больше","morning":"утро",
-            "most":"большинство","mother":"мать","mouth":"рот","move":"двигаться","movie":"фильм",
-            "Mr.":"Господин","Mrs.":"Миссис","much":"много","mum":"мама","mumble":"бормотать",
-            "music":"музыка","must":"должен","mutter":"бормотать","my":"мой","myself":"сам",
-            "name":"имя","near":"близко","nearly":"почти","neck":"шея","need":"нуждаться","nervous":"нервный",
-            "never":"никогда","new":"новый","next":"следующий","nice":"приятный","night":"ночь",
-            "no":"нет","nod":"кивать","noise":"шум","none":"никто","normal":"нормальный",
-            "nose":"нос","not":"нет","note":"заметка","nothing":"ничего","notice":"замечать",
-            "now":"сейчас","number":"номер","obviously":"очевидно","of":"из","off":"откл.",
-            "offer":"предлагать","office":"офис","often":"часто","oh":"ох","okay":"ладно",
-            "old":"старый","on":"на","once":"один раз","one":"один","only":"только","onto":"на",
-            "open":"открытый","or":"или","order":"порядок","other":"другой","our":"наш","out":"вне",
-            "outside":"вне","over":"над","own":"собственный","pack":"упаковка","pain":"боль",
-            "paint":"краска","pair":"пара","pants":"брюки","paper":"бумага","parents":"родители",
-            "park":"парк","part":"часть","party":"вечеринка","pass":"проходить","past":"прошлое",
-            "pause":"пауза","pay":"платить","people":"люди","perfect":"идеальный","perhaps":"возможно",
-            "person":"человек","phone":"телефон","pick":"выбирать","picture":"картинка","piece":"кусочек",
-            "pink":"розовый","piss":"писать","place":"место","plan":"план","play":"играть",
-            "please":"пожалуйста","pocket":"карман","point":"точка","police":"полиция","pop":"поп",
-            "position":"позиция","possible":"возможный","power":"сила","practically":"практически","present":"настоящий",
-            "press":"пресс","pretend":"притворяться","pretty":"красивый","probably":"вероятно",
-            "problem":"проблема","promise":"обещать","pull":"тянуть","punch":"удар","push":"толкать",
-            "put":"класть","question":"вопрос","quick":"быстрый","quickly":"быстро","quiet":"тихий",
-            "quietly":"тихо","quite":"довольно","race":"гонка","rain":"дождь","raise":"поднимать",
-            "ran":"бежал","rang":"звонок","rather":"скорее","reach":"достигать","read":"читать",
-            "ready":"готовый","real":"реальный","realize":"понимать","really":"действительно",
-            "reason":"причина","recognize":"узнавать","red":"красный","relationship":"отношения",
-            "relax":"расслабиться","remain":"оставаться","remember":"помнить","remind":"напоминать",
-            "repeat":"повторять","reply":"отвечать","respond":"отвечать","rest":"остаток",
-            "return":"возвращать","ride":"кататься","right":"правильный","ring":"кольцо",
-            "road":"дорога","rock":"камень","roll":"катиться","room":"комната","rose":"роза",
-            "round":"круглый","rub":"тереть","run":"бежать","rush":"торопиться","sad":"грустный",
-            "safe":"безопасный","said":"сказал","same":"тот же","sat":"сидел","save":"спасать",
-            "saw":"видел","say":"говорить","scare":"пугать","school":"школа","scream":"кричать",
-            "search":"искать","seat":"сиденье","second":"второй","see":"видеть","seem":"казаться",
-            "seen":"увиденный","self":"сам","send":"посылать","sense":"чувство","sent":"послан",
-            "serious":"серьезный","seriously":"серьезно","set":"настраивать","settle":"урежаться",            "seven":"семь","several":"несколько","shadow":"тень","shake":"трясти","share":"делить",
-            "she":"она","she'd":"она бы","she's":"она","shift":"смена","shirt":"рубашка",
-            "shit":"чушь","shock":"шок","shoe":"туфель","shook":"трясся","shop":"магазин",
-            "short":"короткий","shot":"выстрел","should":"должен","shoulder":"плечо","shouldn't":"не должен",
-            "shout":"кричать","shove":"толкать","show":"показывать","shower":"душ","shrug":"пожимать плечами",
-            "shut":"закрывать","sick":"病ный","side":"сторона","sigh":"вздыхать","sight":"зрение",
-            "sign":"знак","silence":"тишина","silent":"тихий","simply":"просто","since":"с тех пор",
-            "single":"один","sir":"сэр","sister":"сестра","sit":"сидеть","situation":"ситуация",
-            "six":"шесть","skin":"кожа","sky":"небо","slam":"шлепать","sleep":"спать","slightly":"немного",
-            "slip":"скользить","slow":"медленный","slowly":"медленно","small":"маленький","smell":"пахнуть",
-            "smile":"улыбаться","smirk":"презрительно улыбаться","smoke":"дымить","snap":"щелкать",
-            "so":"так","soft":"мягкий","softly":"мягко","some":"некоторый","somehow":"как-то",
-            "someone":"кто-то","something":"что-то","sometimes":"иногда","somewhere":"где-то",
-            "son":"сын","song":"песня","soon":"скоро","sorry":"извини","sort":"вид","sound":"звук",
-            "space":"пространство","speak":"говорить","spend":"тратить","spent":"потраченный",
-            "spoke":"говорил","spot":"пятно","stair":"ступенька","stand":"стоять","star":"звезда",
-            "stare":"смотреть","start":"начинать","state":"состояние","stay":"оставаться","step":"шаг",
-            "stick":"палка","still":"все еще","stomach":"желудок","stood":"стоял","stop":"останавливать",
-            "store":"магазин","story":"история","straight":"прямой","strange":"странно","street":"улица",
-            "strong":"сильный","struggle":"бороться","stuck":"застрявший","student":"студент",
-            "study":"учиться","stuff":"вещи","stupid":"глупый","such":"такой","suck":"сосать",
-            "sudden":"внезапный","suddenly":"внезапно","suggest":"предлагать","summer":"лето",
-            "sun":"солнце","suppose":"предполагать","sure":"уверенный","surprise":"удивление",
-            "surround":"окружать","sweet":"сладкий","table":"стол","take":"брать","taken":"взято",
-            "talk":"говорить","tall":"высокий","teacher":"учитель","team":"команда","tear":"слеза",
-            "teeth":"зубы","tell":"рассказывать","ten":"десять","than":"чем","thank":"спасибо",
-            "that":"это","that's":"это","the":"этот","their":"их","them":"их","themselves":"они сами",
-            "then":"потом","there":"там","there's":"там есть","these":"эти","they":"они","they'd":"они бы",
-            "they're":"они","thick":"толстый","thing":"вещь","think":"думать","third":"третий",
-            "this":"этот","those":"те","though":"хотя","thought":"мысль","three":"три","threw":"бросил",
-            "throat":"горло","through":"через","throw":"бросать","tie":"галстук","tight":"плотный",
-            "time":"время","tiny":"крошечный","tire":"шина","to":"к","today":"сегодня",
-            "together":"вместе","told":"сказал","tomorrow":"завтра","tone":"тон","tongue":"язык",
-            "tonight":" tonight","too":"тоже","took":"взял","top":"верх","totally":"полностью",
-            "touch":"касаться","toward":"к","town":"город","track":"трек","trail":"тропа","train":"поезд",
-            "tree":"дерево","trip":"путешествие","trouble":" trouble","trust":"доверять","truth":"правда",
-            "try":"пытаться","turn":"поворачивать","TV":"ТВ","twenty":"двадцать","two":"два",
-            "type":"тип","uncle":"дядя","under":"под","understand":"понимать","until":"пока не",
-            "up":"вверх","upon":"на","us":"нас","use":"пользоваться","usual":"обычный",
-            "usually":"обычно","very":"очень","visit":"посещать","voice":"голос","wait":"ждать",
-            "wake":"просыпаться","walk":"ходить","wall":"стена","want":"хотеть","warm":"теплый",
-            "warn":"предупреждать","was":"был","wasn't":"не был","watch":"смотреть","water":"вода",
-            "wave":"волна","way":"путь","we":"мы","we'll":"мы будем","we're":"мы","we've":"мы имеем",
-            "wear":"носить","week":"неделя","weird":"странный","well":"ну","went":"пошел","were":"были",
-            "weren't":"не были","wet":"мокрый","what":"что","what's":"что такое","whatever":"что угодно",
-            "when":"когда","where":"где","whether":"ли","which":"который","while":"пока","whisper":"шептать",
-            "white":"белый","who":"кто","whole":"целый","why":"почему","wide":"широкий","wife":"жена",
-            "will":"будет","wind":"ветер","window":"окно","wipe":"стереть","wish":"желать","with":"с",
-            "within":"в пределах","without":"без","woke":"проснулся","woman":"женщина","women":"женщины",
-            "won't":"не будет","wonder":"диво","wood":"дерево","word":"слово","wore":"носил","work":"работать",            "world":"мир","worry":"волноваться","worse":"хуже","would":"бы","wouldn't":"не бы",
-            "wow":"вау","wrap":"обертывать","write":"писать","wrong":"неправильно","yeah":"да","year":"год",
-            "yell":"кричать","yes":"да","yet":"еще","you":"ты","you'd":"ты бы","you'll":"ты будешь",
-            "you're":"ты","you've":"ты имеешь","young":"молодой","your":"твой","yourself":"сам"
+            "you","you'd","you'll","you're","you've","young","your","yourself"        ];
+
+        // === ПЕРЕВОДЫ ===
+        const TRANSLATIONS = {
+            "able":"способный","about":"около","above":"над","accept":"принимать","across":"через","act":"действовать","actually":"на самом деле","add":"добавлять","admit":"признавать","afraid":"бояться","after":"после","afternoon":"вечер","again":"снова","against":"против","age":"возраст","ago":"назад","agree":"соглашаться","ah":"ах","ahead":"впереди","air":"воздух","all":"весь","allow":"разрешать","almost":"почти","alone":"один","along":"вдоль","already":"уже","alright":"ладно","also":"также","although":"хотя","always":"всегда","am":"есть","amaze":"удивлять","an":"один","and":"и","anger":"гнев","angry":"злой","animal":"животное","annoy":"раздражать","another":"другой","answer":"ответ","any":"любой","anymore":"больше ни разу","anyone":"кто-либо","anything":"что-либо","anyway":"во всяком случае","apartment":"квартира","apparently":"очевидно","appear":"появляться","approach":"подходить","are":"есть","area":"область","aren't":"не есть","arm":"рука","around":"вокруг","arrive":"приезжать","as":"как","ask":"спрашивать","asleep":"спящий","ass":"осел","at":"у","attack":"атаковать","attempt":"пытаться","attention":"внимание","aunt":"тетя","avoid":"избегать","away":"далеко","baby":"малыш","back":"назад","bad":"плохой","bag":"сумка","ball":"мяч","band":"группа","bar":"бар","barely":"едва","bathroom":"ванная","be":"быть","beat":"бить","beautiful":"красивый","became":"стал","because":"потому что","become":"становиться","bed":"кровать","bedroom":"спальня","been":"был","before":"до","began":"начал","begin":"начинать","behind":"за","believe":"верить","bell":"колокол","beside":"рядом","besides":"кроме","best":"лучший","better":"лучше","between":"между","big":"большой","bit":"кусочек","bite":"кусать","black":"черный","blink":"мигать","block":"блок","blonde":"блондин","blood":"кровь","blue":"синий","blush":"краснеть","body":"тело","book":"книга","bore":"скучать","both":"оба","bother":"беспокоить","bottle":"бутылка","bottom":"дно","box":"коробка","boy":"мальчик","boyfriend":"парень","brain":"мозг","break":"ломать","breakfast":"завтрак","breath":"дыхание","breathe":"дышать","bright":"яркий","bring":"приносить","broke":"сломанный","broken":"сломанный","brother":"брат","brought":"принес","brown":"коричневый","brush":"щетка","build":"строить","burn":"гореть","burst":"взрываться","bus":"автобус","business":"бизнес","busy":"занятый","but":"но","buy":"покупать","by":"у","call":"звонить","calm":"спокойный","came":"пришел","can":"могу","can't":"не могу","car":"машина","card":"карточка","care":"забота","carefully":"внимательно","carry":"нести","case":"случай","cat":"кот","catch":"ловить","caught":"пойман","cause":"причина","cell":"клетка","chair":"стул","chance":"шанс","change":"менять","chase":"гоняться","check":"проверять","cheek":"щека","chest":"грудная клетка","child":"ребенок","children":"дети","chuckle":"усмехаться","city":"город","class":"класс","clean":"чистый","clear":"ясный","climb":"подниматься","close":"закрывать","clothes":"одежда","coffee":"кофе","cold":"холодный","college":"колледж","color":"цвет","come":"приходить","comment":"комментарий","complete":"полный","completely":"полностью","computer":"компьютер","concern":"забота","confuse":"путать","consider":"думать","continue":"продолжать","control":"контроль","conversation":"разговор","cool":"крутой","corner":"угол","couch":"диван","could":"мог бы","couldn't":"не мог","counter":"счетчик","couple":"пара","course":"курс","cover":"покрывать","crack":"трещина","crazy":"безумный","cross":"переходить","crowd":"толпа","cry":"плакать","cup":"чашка","cut":"резать","cute":"милашка","dad":"папа","damn":"блин","dance":"танцевать","dark":"темный","date":"дата","daughter":"дочь","day":"день","dead":"мертвый","deal":"сделка","dear":"дорогой","death":"смерть","decide":"решать","deep":"глубокий","definitely":"определенно","desk":"стол","did":"сделал","didn't":"не делал","die":"умирать","different":"различный","dinner":"ужин","direction":"направление","disappear":"исчезать","do":"делать","doctor":"врач","does":"делает","doesn't":"не делает","dog":"собака","don't":"не делаю","done":"сделано","door":"дверь","doubt":"сомнение","down":"вниз","drag":"тянуть","draw":"рисовать","dream":"мечта","dress":"платье","drink":"пить","drive":"вести","drop":"ронять","drove":"ехал","dry":"сухой","during":"во время","each":"каждый","ear":"ухо","early":"ранний","easily":"легко","easy":"легкий","eat":"есть","edge":"край","either":"либо","else":"иначе","empty":"пустой","end":"конец","enjoy":"наслаждаться","enough":"достаточно","enter":"входить","entire":"целый","escape":"убегать","especially":"особенно","even":"даже","evening":"вечер","eventually":"в конце концов","ever":"когда-либо","every":"каждый","everyone":"все","everything":"всё","exactly":"точно","except":"кроме","excite":"волновать","exclaim":"восклицать","excuse":"извинение","expect":"ожидать","explain":"объяснять","expression":"выражение","eye":"глаз","eyebrow":"бровь","face":"лицо","fact":"факт","fall":"падать","family":"семья","far":"далеко","fast":"быстрый","father":"отец","fault":"ошибка","favorite":"любимый","fear":"страх","feel":"чувствовать","feet":"ноги","fell":"упал","felt":"почувствовал","few":"немного","field":"поле","fight":"драться","figure":"понимать","fill":"заполнять","finally":"наконец","find":"находить","fine":"хороший","finger":"палец","finish":"заканчивать","fire":"огонь","first":"первый","fit":"подходить","five":"пять","fix":"чинить","flash":"блистать","flip":"перевернуть","floor":"пол","fly":"летать","focus":"фокус","follow":"следовать","food":"еда","foot":"ступня","for":"для","force":"сила","forget":"забывать","form":"форма","forward":"вперед","found":"нашел","four":"четыре","free":"свободный","friend":"друг","from":"от","front":"перед","frown":"хмуриться","fuck":"черт","full":"полный","fun":"веселье","funny":"смешной","further":"далее","game":"игра","gasp":"ахнуть","gave":"дал","gaze":"смотреть","gently":"нежно","get":"получать","giggle":"хохотать","girl":"девочка","girlfriend":"девушка","give":"давать","given":"данный","glad":"рад","glance":"взгляд","glare":"ярость","glass":"стакан","go":"идти","God":"Бог","gone":"ушел","gonna":"собираться","good":"хороший","got":"получил","gotten":"полученный","grab":"хватать","great":"великолепный","green":"зеленый","greet":"приветствовать","grey":"серый","grin":"улыбаться","grip":"хватать","groan":"стонать","ground":"земля","group":"группа","grow":"расти","guard":"охранять","guess":"угадывать","gun":"пушка","guy":"парень","had":"имел","hadn't":"не имел","hair":"волосы","half":"половина","hall":"холл","hallway":"коридор","hand":"рука","handle":"ручка","hang":"висеть","happen":"случаться","happy":"счастливый","hard":"трудный","has":"имеет","hate":"ненавидеть","have":"иметь","haven't":"не иметь","he":"он","he'd":"он бы","he's":"он","head":"голова","hear":"слышать","heard":"слышал","heart":"сердце","heavy":"тяжелый","held":"держал","hell":"ад","hello":"привет","help":"помощь","her":"она","here":"здесь","herself":"сама","hey":"эй","hi":"привет","hide":"прятать","high":"высокий","him":"его","himself":"сам","his":"его","hit":"ударять","hold":"держать","home":"дом","hope":"надежда","horse":"лошадь","hospital":"больница","hot":"горячий","hour":"час","house":"дом","how":"как","however":"однако","hug":"обнимать","huge":"огромный","huh":"хмм","human":"человек","hundred":"сто","hung":"повешен","hurry":"спешить","hurt":"болеть","I":"я","I'd":"я бы","I'll":"я буду","I'm":"я","I've":"я имею","ice":"лед","idea":"идея","if":"если","ignore":"игнорировать","imagine":"представлять","immediately":"немедленно","important":"важный","in":"в","inside":"внутри","instead":"вместо","interest":"интерес","interrupt":"прерывать","into":"в","is":"есть","isn't":"не есть","it":"это","it's":"это","its":"его","jacket":"куртка","jeans":"джинсы","jerk":"дурак","job":"работа","join":"присоединяться","joke":"шутка","jump":"прыгать","just":"только","keep":"держать","kept":"держал","key":"ключ","kick":"пинать","kid":"ребенок","kill":"убивать","kind":"вид","kiss":"целовать","kitchen":"кухня","knee":"колено","knew":"знал","knock":"стучать","know":"знать","known":"известный","lady":"леди","land":"земля","large":"большой","last":"последний","late":"поздний","laugh":"смеяться","lay":"класть","lead":"водить","lean":"опираться","learn":"учиться","least":"меньше всего","leave":"оставлять","led":"вел","left":"слева","leg":"нога","less":"меньше","let":"позволять","letter":"письмо","lie":"солгать","life":"жизнь","lift":"лифт","light":"свет","like":"подобный","line":"линия","lip":"губа","listen":"слушать","little":"маленький","live":"жить","lock":"замок","locker":"шкафчик","long":"долгий","look":"глядеть","lose":"терять","lost":"потерянный","lot":"много","loud":"громкий","love":"любовь","low":"низкий","lunch":"обед","mad":"сумасшедший","made":"сделанный","make":"делать","man":"мужчина","manage":"управлять","many":"много","mark":"марка","marry":"жениться","match":"спичка","matter":"вещь","may":"может быть","maybe":"возможно","me":"меня","mean":"значить","meant":"значил","meet":"встречать","memory":"память","men":"мужчины","mention":"упоминать","met":"встретился","middle":"середина","might":"может быть","mind":"разум","mine":"мой","minute":"минута","mirror":"зеркало","miss":"скучать","mom":"мама","moment":"момент","money":"деньги","month":"месяц","mood":"настроение","more":"больше","morning":"утро","most":"большинство","mother":"мать","mouth":"рот","move":"двигаться","movie":"фильм","Mr.":"Господин","Mrs.":"Миссис","much":"много","mum":"мама","mumble":"бормотать","music":"музыка","must":"должен","mutter":"бормотать","my":"мой","myself":"сам","name":"имя","near":"близко","nearly":"почти","neck":"шея","need":"нуждаться","nervous":"нервный","never":"никогда","new":"новый","next":"следующий","nice":"приятный","night":"ночь","no":"нет","nod":"кивать","noise":"шум","none":"никто","normal":"нормальный","nose":"нос","not":"нет","note":"заметка","nothing":"ничего","notice":"замечать","now":"сейчас","number":"номер","obviously":"очевидно","of":"из","off":"откл.","offer":"предлагать","office":"офис","often":"часто","oh":"ох","okay":"ладно","old":"старый","on":"на","once":"один раз","one":"один","only":"только","onto":"на","open":"открытый","or":"или","order":"порядок","other":"другой","our":"наш","out":"вне","outside":"вне","over":"над","own":"собственный","pack":"упаковка","pain":"боль","paint":"краска","pair":"пара","pants":"брюки","paper":"бумага","parents":"родители","park":"парк","part":"часть","party":"вечеринка","pass":"проходить","past":"прошлое","pause":"пауза","pay":"платить","people":"люди","perfect":"идеальный","perhaps":"возможно","person":"человек","phone":"телефон","pick":"выбирать","picture":"картинка","piece":"кусочек","pink":"розовый","piss":"писать","place":"место","plan":"план","play":"играть","please":"пожалуйста","pocket":"карман","point":"точка","police":"полиция","pop":"поп","position":"позиция","possible":"возможный","power":"сила","practically":"практически","present":"настоящий","press":"пресс","pretend":"притворяться","pretty":"красивый","probably":"вероятно","problem":"проблема","promise":"обещать","pull":"тянуть","punch":"удар","push":"толкать","put":"класть","question":"вопрос","quick":"быстрый","quickly":"быстро","quiet":"тихий","quietly":"тихо","quite":"довольно","race":"гонка","rain":"дождь","raise":"поднимать","ran":"бежал","rang":"звонок","rather":"скорее","reach":"достигать","read":"читать","ready":"готовый","real":"реальный","realize":"понимать","really":"действительно","reason":"причина","recognize":"узнавать","red":"красный","relationship":"отношения","relax":"расслабиться","remain":"оставаться","remember":"помнить","remind":"напоминать","repeat":"повторять","reply":"отвечать","respond":"отвечать","rest":"остаток","return":"возвращать","ride":"кататься","right":"правильный","ring":"кольцо","road":"дорога","rock":"камень","roll":"катиться","room":"комната","rose":"роза","round":"круглый","rub":"тереть","run":"бежать","rush":"торопиться","sad":"грустный","safe":"безопасный","said":"сказал","same":"тот же","sat":"сидел","save":"спасать","saw":"видел","say":"говорить","scare":"пугать","school":"школа","scream":"кричать","search":"искать","seat":"сиденье","second":"второй","see":"видеть","seem":"казаться","seen":"увиденный","self":"сам","send":"посылать","sense":"чувство","sent":"послан","serious":"серьезный","seriously":"серьезно","set":"настраивать","settle":"урежаться","seven":"семь","several":"несколько","shadow":"тень","shake":"трясти","share":"делить","she":"она","she'd":"она бы","she's":"она","shift":"смена","shirt":"рубашка","shit":"чушь","shock":"шок","shoe":"туфель","shook":"трясся","shop":"магазин","short":"короткий","shot":"выстрел","should":"должен","shoulder":"плечо","shouldn't":"не должен","shout":"кричать","shove":"толкать","show":"показывать","shower":"душ","shrug":"пожимать плечами","shut":"закрывать","sick":"больной","side":"сторона","sigh":"вздыхать","sight":"зрение","sign":"знак","silence":"тишина","silent":"тихий","simply":"просто","since":"с тех пор","single":"один","sir":"сэр","sister":"сестра","sit":"сидеть","situation":"ситуация","six":"шесть","skin":"кожа","sky":"небо","slam":"шлепать","sleep":"спать","slightly":"немного","slip":"скользить","slow":"медленный","slowly":"медленно","small":"маленький","smell":"пахнуть","smile":"улыбаться","smirk":"презрительно улыбаться","smoke":"дымить","snap":"щелкать","so":"так","soft":"мягкий","softly":"мягко","some":"некоторый","somehow":"как-то","someone":"кто-то","something":"что-то","sometimes":"иногда","somewhere":"где-то","son":"сын","song":"песня","soon":"скоро","sorry":"извини","sort":"вид","sound":"звук","space":"пространство","speak":"говорить","spend":"тратить","spent":"потраченный","spoke":"говорил","spot":"пятно","stair":"ступенька","stand":"стоять","star":"звезда","stare":"смотреть","start":"начинать","state":"состояние","stay":"оставаться","step":"шаг","stick":"палка","still":"все еще","stomach":"желудок","stood":"стоял","stop":"останавливать","store":"магазин","story":"история","straight":"прямой","strange":"странно","street":"улица","strong":"сильный","struggle":"бороться","stuck":"застрявший","student":"студент","study":"учиться","stuff":"вещи","stupid":"глупый","such":"такой","suck":"сосать","sudden":"внезапный","suddenly":"внезапно","suggest":"предлагать","summer":"лето","sun":"солнце","suppose":"предполагать","sure":"уверенный","surprise":"удивление","surround":"окружать","sweet":"сладкий","table":"стол","take":"брать","taken":"взято","talk":"говорить","tall":"высокий","teacher":"учитель","team":"команда","tear":"слеза","teeth":"зубы","tell":"рассказывать","ten":"десять","than":"чем","thank":"спасибо","that":"это","that's":"это","the":"этот","their":"их","them":"их","themselves":"они сами","then":"потом","there":"там","there's":"там есть","these":"эти","they":"они","they'd":"они бы","they're":"они","thick":"толстый","thing":"вещь","think":"думать","third":"третий","this":"этот","those":"те","though":"хотя","thought":"мысль","three":"три","threw":"бросил","throat":"горло","through":"через","throw":"бросать","tie":"галстук","tight":"плотный","time":"время","tiny":"крошечный","tire":"шина","to":"к","today":"сегодня","together":"вместе","told":"сказал","tomorrow":"завтра","tone":"тон","tongue":"язык","tonight":" tonight","too":"тоже","took":"взял","top":"верх","totally":"полностью","touch":"касаться","toward":"к","town":"город","track":"трек","trail":"тропа","train":"поезд","tree":"дерево","trip":"путешествие","trouble":" проблема","true":"правда","trust":"доверять","truth":"правда","try":"пытаться","turn":"поворот","TV":"ТВ","twenty":"двадцать","two":"два","type":"тип","uncle":"дядя","under":"под","understand":"понимать","until":"пока не","up":"вверх","upon":"на","us":"нас","use":"пользовать","usual":"обычный","usually":"обычно","very":"очень","visit":"посещать","voice":"голос","wait":"ждать","wake":"просыпаться","walk":"ходить","wall":"стена","want":"хотеть","warm":"теплый","warn":"предупреждать","was":"был","wasn't":"не был","watch":"смотреть","water":"вода","wave":"волна","way":"путь","we":"мы","we'll":"мы будем","we're":"мы","we've":"мы имеем","wear":"носить","week":"неделя","weird":"странный","well":"ну","went":"пошел","were":"были","weren't":"не были","wet":"мокрый","what":"что","what's":"что такое","whatever":"что угодно","when":"когда","where":"где","whether":"ли","which":"который","while":"пока","whisper":"шептать","white":"белый","who":"кто","whole":"целый","why":"почему","wide":"широкий","wife":"жена","will":"будет","wind":"ветер","window":"окно","wipe":"стереть","wish":"желать","with":"с","within":"в пределах","without":"без","woke":"проснулся","woman":"женщина","women":"женщины","won't":"не будет","wonder":"диво","wood":"дерево","word":"слово","wore":"носил","work":"работать","world":"мир","worry":"волноваться","worse":"хуже","would":"бы","wouldn't":"не бы","wow":"вау","wrap":"обертывать","write":"писать","wrong":"неправильно","yeah":"да","year":"год","yell":"кричать","yes":"да","yet":"еще","you":"ты","you'd":"ты бы","you'll":"ты будешь","you're":"ты","you've":"ты имеешь","young":"молодой","your":"твой","yourself":"сам"
         };
 
-        let progress = null;
-        let currentPool = [];
-        let currentCardIndex = 0;
-        let quizQueue = [];
-        let quizScore = 0;
-        let quizCorrect = 0;
-        let reviewMode = false;
+        // === СОСТОЯНИЕ ПРИЛОЖЕНИЯ ===
+        let state = {
+            currentLevel: 1,
+            reviewMode: false,
+            currentPool: [],
+            currentIndex: 0,
+            cardDirection: 'en',
+            dailyLimit: 20,        // макс новых слов в день
+            sessionNewCount: 0,    // сколько новых показано в этой сессии
+            sessionDate: '',       // дата текущей сессии
+            quizQueue: [],
+            quizScore: 0,
+            quizCorrect: 0,
+            learnedWords: [],
+            streakDays: [],
+            dailySessions: [],
+            // SM-2: { word: { interval, easeFactor, nextDate, repetitions } }
+            srsData: {},
+            srsDoneToday: 0,
+            srsLastDate: ''
+        };
 
-        function initApp() {
-            progress = loadProgress();
-            progress = checkStreak(progress);
-            saveProgress(progress);
-            
+        // === ИНИЦИАЛИЗАЦИЯ ===
+        window.onload = function() {
+            loadState();
             setupEventListeners();
-            updateStats(progress);
-            generateWeekCalendar(progress);
-            renderLevels(progress);
-        }
+            updateStats();
+            updateLevelStats();
+            updateDailyLimitUI();
+            checkStreak();
+        };
 
+        // === НАСТРОЙКА ОБРАБОТЧИКОВ ===
         function setupEventListeners() {
-            document.getElementById('tabLevels').onclick = function() { switchTab('levels'); };
-            document.getElementById('tabCards').onclick = function() { switchTab('cards'); };
-            document.getElementById('tabQuiz').onclick = function() { switchTab('quiz'); }
+            // Навигация по вкладкам
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', switchTab);
+            });
+            
+            // Выбор уровня
+            document.getElementById('levelSelect').addEventListener('change', startLevel);
+            document.getElementById('startLevelBtn').addEventListener('click', function() {
+                startLevel();
+                switchSection('cards');
+            });
+            
+            // Режим карточек
+            document.getElementById('modeStudyBtn').addEventListener('click', () => setReviewMode(false));
+            document.getElementById('modeReviewBtn').addEventListener('click', () => setReviewMode(true));
+            
+            // Карточка
+            document.getElementById('flashcard').addEventListener('click', flipCard);
+            document.getElementById('audioFront').addEventListener('click', function(e) { e.stopPropagation(); playAudio(e); });            document.getElementById('audioBack').addEventListener('click', function(e) { e.stopPropagation(); playAudio(e); });
+            
+            // Ответы на карточке
+            document.getElementById('forgotBtn').addEventListener('click', () => handleAnswer('forgot'));
+            document.getElementById('mediumBtn').addEventListener('click', () => handleAnswer('medium'));
+            document.getElementById('knowBtn').addEventListener('click', () => handleAnswer('known'));
+            
+            // Кнопки возврата
+            document.getElementById('backToLevelsBtn').addEventListener('click', () => switchSection('levels'));
+            document.getElementById('backToQuizBtn').addEventListener('click', () => switchSection('levels'));
+            document.getElementById('srsBackBtn').addEventListener('click', () => switchSection('levels'));
 
-            document.getElementById('modeStudy').onclick = function() { toggleMode('study'); }
-            document.getElementById('modeReview').onclick = function() { toggleMode('review'); }
-
-            document.getElementById('audioBtn').onclick = function(e) { 
-                if(e.stopPropagation) e.stopPropagation(); 
-                playAudio(); 
-            };
-            document.getElementById('audioBtnBack').onclick = function(e) { 
-                if(e.stopPropagation) e.stopPropagation(); 
-                playAudio(); 
-            };
-
-            document.getElementById('btnForgot').onclick = function() { handleAnswer('forgot'); }
-            document.getElementById('btnMedium').onclick = function() { handleAnswer('medium'); }
-            document.getElementById('btnKnow').onclick = function() { handleAnswer('known'); }
-
-            document.getElementById('btnMorning').onclick = function() { markSession('morning'); }
-            document.getElementById('btnAfternoon').onclick = function() { markSession('afternoon'); }
-            document.getElementById('btnEvening').onclick = function() { markSession('evening'); }
-            document.getElementById('resetBtn').onclick = resetProgress;
-            document.getElementById('quizOptions').onclick = function(e) {
-                if (e.target.classList.contains('quiz-option')) {
-                    const selected = e.target.textContent.trim();
-                    const correct = e.target.getAttribute('data-correct') === 'true';
-                    
-                    const options = document.querySelectorAll('.quiz-option');
-                    for (var i = 0; i < options.length; i++) { options[i].style.pointerEvents = 'none'; }
-
-                    if (correct) {
-                        e.target.classList.add('correct');
-                        quizCorrect++;
-                        quizScore += 10;
-                        showFeedback('✅', 'Верно!', '+10 очков');
-                    } else {
-                        e.target.classList.add('wrong');
-                        for (var j = 0; j < options.length; j++) {
-                            if (options[j].getAttribute('data-correct') === 'true') options[j].classList.add('correct');
-                        }
-                        showFeedback('❌', 'Ошибка', '');
-                    }
-
-                    updateQuizUI();
-                    setTimeout(nextQuizQuestion, 2000);
-                }
-            };
+            // SM-2
+            document.getElementById('srsFlashcard').addEventListener('click', flipSrsCard);
+            document.getElementById('srsForgotBtn').addEventListener('click', () => handleSrsAnswer(0));
+            document.getElementById('srsMediumBtn').addEventListener('click', () => handleSrsAnswer(3));
+            document.getElementById('srsKnowBtn').addEventListener('click', () => handleSrsAnswer(5));
+            
+            // Викторина
+            document.getElementById('newQuizBtn').addEventListener('click', initQuiz);
+            document.getElementById('quizOptionsContainer').addEventListener('click', handleQuizOptionClick);
+            
+            // Фидбек (скрытие)
+            document.getElementById('feedbackOverlay').addEventListener('click', hideFeedback);
         }
 
-        function switchTab(tabName) {
+        // === НАВИГАЦИЯ ===
+        function switchTab(e) {
             var tabs = document.querySelectorAll('.nav-tab');
-            for (var i = 0; i < tabs.length; i++) { tabs[i].classList.remove('active'); }
+            for(var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            e.currentTarget.classList.add('active');
+            switchSection(e.currentTarget.dataset.section);
+        }
+
+        function switchSection(sectionId) {
+            // Скрыть все секции
+            ['levels', 'cards', 'quiz', 'srs'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
             
-            if (tabName === 'levels') {
-                document.getElementById('tabLevels').classList.add('active');
-                document.getElementById('levelsSection').classList.remove('hidden');
-                document.getElementById('cardsSection').classList.add('hidden');
-                document.getElementById('quizSection').classList.add('hidden');
-            } else if (tabName === 'cards') {
-                document.getElementById('tabCards').classList.add('active');
-                document.getElementById('levelsSection').classList.add('hidden');
-                document.getElementById('cardsSection').classList.remove('hidden');
-                document.getElementById('quizSection').classList.add('hidden');
-                startFlashcards(progress, progress.currentLevel);
-            } else if (tabName === 'quiz') {
-                document.getElementById('tabQuiz').classList.add('active');
-                document.getElementById('levelsSection').classList.add('hidden');
-                document.getElementById('cardsSection').classList.add('hidden');
-                document.getElementById('quizSection').classList.remove('hidden');
-                initializeQuiz();
-            }        }
-
-        function toggleMode(mode) {
-            var modeBtns = document.querySelectorAll('.mode-btn[id^="mode"]');
-            for (var i = 0; i < modeBtns.length; i++) { modeBtns[i].classList.remove('active'); }
+            // Показать нужную
+            document.getElementById(sectionId).classList.remove('hidden');
             
-            if (mode === 'study') {
-                document.getElementById('modeStudy').classList.add('active');
-            } else {
-                document.getElementById('modeReview').classList.add('active');
-            }
-
-            reviewMode = (mode === 'review');
-
-            if(reviewMode) {
-                document.getElementById('studyStatus').classList.add('hidden');
-                document.getElementById('reviewStatus').classList.remove('hidden');
-            } else {
-                document.getElementById('studyStatus').classList.remove('hidden');
-                document.getElementById('reviewStatus').classList.add('hidden');
-            }
-
-            startFlashcards(progress, progress.currentLevel);
-        }
-
-        function renderLevels(progress) {
-            const container = document.getElementById('levelButtons');
-            container.innerHTML = '';
-
-            for (let i = 1; i <= 5; i++) {
-                const levelData = progress.levelProgress[i];
-                const masteredList = Array.from(new Set(levelData.mastered));
-                
-                const totalWordsInLevel = Math.floor(WORDS.length / 5);
-                const masteredPercent = Math.min(100, Math.round((masteredList.length / totalWordsInLevel) * 100));
-
-                const div = document.createElement('div');
-                div.className = `level-btn ${i <= progress.currentLevel ? 'active' : ''} ${masteredPercent >= 100 ? 'completed' : ''}`;
-                div.innerHTML = `<div>Уровень ${i}</div><div class="progress-bar"><div class="progress-fill" style="width: ${masteredPercent}%"></div></div><div style="font-size: 11px; margin-top: 5px;">${masteredPercent}% освоено</div>`;
-                
-                div.onclick = function() { selectLevel(i, progress); }
-                container.appendChild(div);
+            // Обновить табы
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.section === sectionId);
+            });
+            
+            // Инициализация секции
+            if(sectionId === 'cards') {
+                startLevel();
+            } else if(sectionId === 'quiz') {
+                initQuiz();
+            } else if(sectionId === 'srs') {
+                initSrs();
             }
         }
-
-        function selectLevel(level, progress) {
-            progress.currentLevel = level;
-            saveProgress(progress);
-            updateStats(progress);
-            renderLevels(progress);            switchTab('cards');
+        // === УРОВЕНЬ И ПОЛ ===
+        function setReviewMode(review) {
+            state.reviewMode = review;
+            var studyBtn = document.getElementById('modeStudyBtn');
+            var reviewBtn = document.getElementById('modeReviewBtn');
+            
+            if(review) {
+                reviewBtn.classList.add('active');
+                studyBtn.classList.remove('active');
+            } else {
+                studyBtn.classList.add('active');
+                reviewBtn.classList.remove('active');
+            }
+            
+            startLevel();
         }
 
-        function startFlashcards(progress, level) {
-            if (reviewMode) {
-                currentPool = [].concat(
-                    (progress.levelProgress[level]?.learning || []),
-                    (progress.levelProgress[level]?.mastered || [])
-                );
-                currentPool = filterUnique(currentPool);
-            } else {
-                const pool = progress.levelProgress[level]?.learning || [];
-                if (pool.length > 0) {
-                    currentPool = pool.slice();
-                } else {
-                    const levelWords = WORDS.filter(function(idx) { return Math.ceil((idx + 1) / 200) === level; }).slice(0, 50);
-                    currentPool = levelWords.sort(function() { return 0.5 - Math.random(); });
+        function startLevel() {
+            var level = parseInt(document.getElementById('levelSelect').value);
+            state.currentLevel = level;
+            state.currentPool = [];
+            state.currentIndex = 0;
+
+            // Сброс счётчика новых если новый день
+            var today = todayStr();
+            if(state.sessionDate !== today) {
+                state.sessionNewCount = 0;
+                state.sessionDate = today;
+                saveState();
+            }
+
+            var allLevelWords = [];
+            for(var i = 0; i < WORDS.length; i++) {
+                var word = WORDS[i];
+                if(Math.ceil((i + 1) / 200) === level) {
+                    allLevelWords.push(word);
                 }
             }
 
-            if (currentPool.length === 0) {
-                showFeedback('✅', 'Нет слов для обучения!', 'Перейдите к следующему уровню.');
+            if(state.reviewMode) {
+                // Режим повторения — только выученные
+                state.currentPool = allLevelWords.filter(function(w) {
+                    return state.learnedWords.indexOf(w) !== -1;
+                });
+                if(state.currentPool.length === 0) state.currentPool = allLevelWords;
+            } else {
+                // Режим новых слов — исключить уже выученные, применить лимит
+                var unlearnedWords = allLevelWords.filter(function(w) {
+                    return state.learnedWords.indexOf(w) === -1;
+                });
+                var remaining = Math.max(0, state.dailyLimit - state.sessionNewCount);
+                unlearnedWords.sort(function() { return Math.random() - 0.5; });
+                state.currentPool = unlearnedWords.slice(0, remaining);
+
+                if(state.currentPool.length === 0) {
+                    // Лимит исчерпан или всё выучено
+                    showFeedback('🎉', 'Лимит на сегодня!', 'Вы изучили ' + state.sessionNewCount + ' слов сегодня');
+                    updateDailyLimitUI();
+                    return;
+                }
+            }
+
+            state.currentPool.sort(function() { return Math.random() - 0.5; });
+            updateDailyLimitUI();
+            showCard();
+        }
+
+        function updateDailyLimit(val) {
+            state.dailyLimit = parseInt(val);
+            document.getElementById('dailyLimitLabel').textContent = val;
+            document.getElementById('sessionLimitLabel').textContent = val;
+            saveState();
+        }
+
+        function updateDailyLimitUI() {
+            var rangeEl = document.getElementById('dailyLimitRange');
+            if(rangeEl) rangeEl.value = state.dailyLimit;
+            var labelEl = document.getElementById('dailyLimitLabel');
+            if(labelEl) labelEl.textContent = state.dailyLimit;
+            var sessionLimitEl = document.getElementById('sessionLimitLabel');
+            if(sessionLimitEl) sessionLimitEl.textContent = state.dailyLimit;
+            var sessionCountEl = document.getElementById('sessionNewCountLabel');
+            if(sessionCountEl) sessionCountEl.textContent = state.sessionNewCount;
+        }
+
+        function updateLevelStats() {
+            var statsDiv = document.getElementById('levelStats');
+            var html = '';
+            
+            for(var l = 1; l <= 5; l++) {
+                var levelWords = WORDS.filter((_, i) => Math.ceil((i + 1) / 200) === l);
+                var masteredCount = levelWords.filter(w => state.learnedWords.indexOf(w) !== -1).length;
+                var percent = Math.round((masteredCount / levelWords.length) * 100);
+                
+                html += `<div style="margin: 5px 0; font-size: 14px;">
+                    Уровень ${l}: ${percent}% (${masteredCount}/${levelWords.length})
+                    <div class="progress-bar" style="height: 5px;">
+                        <div class="progress-fill" style="width: ${percent}%"></div>
+                    </div>
+                </div>`;
+            }
+            
+            statsDiv.innerHTML = html;
+        }
+
+        // === КАРТОЧКИ ===
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function showCard() {
+            if(state.currentPool.length === 0) {
+                showFeedback('✅', 'Нет слов!', 'Попробуйте другой уровень или режим');
                 return;
             }
+            
+            if(state.currentIndex >= state.currentPool.length) {
+                state.currentIndex = 0;
+                alert('Все слова пройдены! Начинаем заново.');
+            }
+            
+            var word = state.currentPool[state.currentIndex];
+            var trans = TRANSLATIONS[word.toLowerCase()] || word;
 
-            currentCardIndex = 0;
-            document.getElementById('answerActions').classList.remove('hidden');
-            showWord(currentPool[0]);
+            // Чередуем направление каждую карточку
+            state.cardDirection = (state.currentIndex % 2 === 0) ? 'en' : 'ru';
+
+            var frontText, backText, frontLang, backLang, badge;
+            if(state.cardDirection === 'en') {
+                frontText = word;
+                backText = trans;
+                frontLang = 'en-US';
+                badge = 'EN → RU';
+            } else {
+                frontText = trans;
+                backText = word;
+                frontLang = 'ru-RU';
+                badge = 'RU → EN';
+            }
+
+            document.getElementById('cardDirectionBadge').textContent = badge;
+            document.getElementById('frontWord').textContent = frontText;
+            document.getElementById('backTranslation').textContent = backText;
+            document.getElementById('backExample').textContent = '';
+            document.getElementById('cardCounter').textContent = (state.currentIndex + 1) + '/' + state.currentPool.length;
+            document.getElementById('answerButtons').classList.remove('hidden');
+            document.getElementById('flashcard').classList.remove('flipped');
+
+            // Автоозвучка
+            setTimeout(function() {
+                if(window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                    var utterance = new SpeechSynthesisUtterance(frontText);
+                    utterance.lang = frontLang;
+                    utterance.rate = 0.85;
+                    window.speechSynthesis.speak(utterance);
+                }
+            }, 300);
         }
 
-        function showWord(word) {
-            if (!word) return;
-            document.getElementById('frontWord').textContent = word;
-            document.getElementById('backTranslation').textContent = translationsDB[word.toLowerCase()] || word;
-            document.getElementById('backExample').textContent = generateExampleSentence(word);
-            document.getElementById('cardCounter').textContent = `${Math.min(currentCardIndex + 1, currentPool.length)}/${currentPool.length}`;
-        }
-
-        function filterUnique(arr) {
-            return arr.filter(function(item, pos, self) { return self.indexOf(item) === pos; });
-        }
-
-        function flipCard() {
-            document.getElementById('flashcardElement').classList.toggle('flipped');
-        }
-
-        function playAudio() {
-            const wordEl = document.getElementById('frontWord');
-            if (wordEl && window.speechSynthesis) {
-                const word = wordEl.textContent;                const utterance = new SpeechSynthesisUtterance(word);
-                utterance.lang = 'en-US';
-                utterance.rate = 0.9;
-                speechSynthesis.speak(utterance);
+        function playAudio(e) {
+            if(e) e.stopPropagation();
+            var isFlipped = document.getElementById('flashcard').classList.contains('flipped');
+            var text = isFlipped
+                ? document.getElementById('backTranslation').textContent
+                : document.getElementById('frontWord').textContent;
+            // Язык зависит от направления и стороны карточки
+            var lang;
+            if(state.cardDirection === 'en') {
+                lang = isFlipped ? 'ru-RU' : 'en-US';
+            } else {
+                lang = isFlipped ? 'en-US' : 'ru-RU';
+            }
+            if(window.speechSynthesis && text) {
+                window.speechSynthesis.cancel();
+                var utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                utterance.rate = 0.85;
+                utterance.pitch = 1;
+                window.speechSynthesis.speak(utterance);
             }
         }
 
         function handleAnswer(answer) {
-            const flashcard = document.getElementById('flashcardElement');
-            flashcard.classList.remove('flipped');
+            var word = state.currentPool[state.currentIndex];
+            var icon = '', text = '', msg = '';
 
-            let word = document.getElementById('frontWord').textContent;
-            const loadedProgress = loadProgress();
-
-            if (answer === 'forgot') {
-                showFeedback('❌', 'Забыл', 'Слово будет повторено позже');
-                if (!loadedProgress.studyHistory) loadedProgress.studyHistory = {};
-                loadedProgress.studyHistory[word] = (loadedProgress.studyHistory[word] || 0) + 1;
-            } else if (answer === 'medium') {
-                showFeedback('🟡', 'Сложно', 'Добавляется в промежуточный повтор');
-            } else if (answer === 'known') {
-                showFeedback('✅', 'Отлично!', 'Хорошая работа!');
-                if (loadedProgress.learnedWords.indexOf(word) === -1) {
-                    loadedProgress.learnedWords.push(word);
-                }
-                loadedProgress.correctAnswers++;
-            }
-
-            loadedProgress.totalQuestions++;
-            saveProgress(loadedProgress);
-            updateStats(loadedProgress);
-
-            nextCard();
-        }
-
-        function nextCard() {
-            currentCardIndex++;
-            if (currentCardIndex >= currentPool.length) {
-                currentCardIndex = 0;
-                showFeedback('🎉', 'Все слова пройдены!', 'Начните заново или выберите другой уровень.');
+            if(answer === 'known') {
+                icon = '✅'; text = 'Отлично!'; msg = 'Слово добавлено в выученные';
+                addToLearned(word);
+            } else if(answer === 'medium') {
+                icon = '🟡'; text = 'Неплохо'; msg = 'Повторить позже';
+                // Вставить слово через 5 позиций
+                var insertAt = Math.min(state.currentIndex + 5, state.currentPool.length);
+                state.currentPool.splice(insertAt, 0, word);
             } else {
-                showWord(currentPool[currentCardIndex]);
+                icon = '❌'; text = 'Забыл'; msg = 'Покажу через 3 слова';
+                // Вставить слово через 3 позиции
+                var insertAt = Math.min(state.currentIndex + 3, state.currentPool.length);
+                state.currentPool.splice(insertAt, 0, word);
+            }
+
+            // Считаем новые слова (не выученные ранее, только в режиме новых)
+            if(!state.reviewMode && answer === 'known') {
+                state.sessionNewCount++;
+                saveState();
+                updateDailyLimitUI();
+            }
+
+            showFeedback(icon, text, msg);
+
+            setTimeout(function() {
+                state.currentIndex++;
+                // Проверить лимит
+                if(!state.reviewMode && state.sessionNewCount >= state.dailyLimit) {
+                    showFeedback('🎉', 'Лимит на сегодня!', 'Вы изучили ' + state.sessionNewCount + ' слов');
+                    return;
+                }
+                showCard();
+            }, 1500);
+        }
+
+        function addToLearned(word) {
+            if(state.learnedWords.indexOf(word) === -1) {
+                state.learnedWords.push(word);
+            }
+            // Автоматически добавить в SM-2 если ещё нет
+            srsAddWord(word);
+            saveState();
+            updateStats();
+            updateLevelStats();
+        }
+
+        // === SM-2 АЛГОРИТМ ===
+        function todayStr() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function addDays(dateStr, days) {
+            var d = new Date(dateStr);
+            d.setDate(d.getDate() + days);
+            return d.toISOString().split('T')[0];
+        }
+
+        function srsAddWord(word) {
+            if(!state.srsData[word]) {
+                state.srsData[word] = {
+                    interval: 1,
+                    easeFactor: 2.5,
+                    repetitions: 0,
+                    nextDate: todayStr()
+                };
             }
         }
 
-        function initializeQuiz() {
-            const loadedProgress = loadProgress();
-            const words = WORDS.filter(function(idx) { return Math.ceil((idx + 1) / 200) === loadedProgress.currentLevel; });
-            quizQueue = [].concat(words).sort(function() { return 0.5 - Math.random(); }).slice(0, 20);
-            quizScore = 0;            quizCorrect = 0;
-            updateQuizUI();
+        // SM-2: quality 0=забыл, 3=средне, 5=знаю
+        function sm2Update(word, quality) {
+            var card = state.srsData[word];
+            if(!card) return;
+
+            var ef = card.easeFactor;
+            ef = ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+            if(ef < 1.3) ef = 1.3;
+
+            var interval;
+            if(quality < 3) {
+                // Забыл — сброс
+                card.repetitions = 0;
+                interval = 1;
+            } else {
+                if(card.repetitions === 0) interval = 1;
+                else if(card.repetitions === 1) interval = 3;
+                else interval = Math.round(card.interval * ef);
+                card.repetitions++;
+            }
+
+            card.interval = interval;
+            card.easeFactor = ef;
+            card.nextDate = addDays(todayStr(), interval);
+            saveState();
+        }
+
+        function getSrsDueWords() {
+            var today = todayStr();
+            return Object.keys(state.srsData).filter(function(w) {
+                return state.srsData[w].nextDate <= today;
+            });
+        }
+
+        // === SM-2 ИНТЕРФЕЙС ===
+        var srsQueue = [];
+        var srsCurrentIndex = 0;
+
+        function initSrs() {
+            // Сброс счётчика если новый день
+            var today = todayStr();
+            if(state.srsLastDate !== today) {
+                state.srsDoneToday = 0;
+                state.srsLastDate = today;
+                saveState();
+            }
+
+            srsQueue = getSrsDueWords();
+            // Перемешать
+            srsQueue.sort(function() { return Math.random() - 0.5; });
+            srsCurrentIndex = 0;
+
+            updateSrsStats();
+            showSrsCard();
+        }
+
+        function updateSrsStats() {
+            document.getElementById('srsDueCount').textContent = srsQueue.length;
+            document.getElementById('srsDoneToday').textContent = state.srsDoneToday;
+            document.getElementById('srsTotalCards').textContent = Object.keys(state.srsData).length;
+        }
+
+        function showSrsCard() {
+            if(srsCurrentIndex >= srsQueue.length) {
+                document.getElementById('srsCard').classList.add('hidden');
+                document.getElementById('srsEmpty').classList.remove('hidden');
+                updateSrsStats();
+                return;
+            }
+
+            document.getElementById('srsEmpty').classList.add('hidden');
+            document.getElementById('srsCard').classList.remove('hidden');
+
+            var word = srsQueue[srsCurrentIndex];
+            var trans = TRANSLATIONS[word.toLowerCase()] || word;
+            var card = state.srsData[word];
+
+            document.getElementById('srsFrontWord').textContent = word;
+            document.getElementById('srsBackTranslation').textContent = trans;
+            document.getElementById('srsCounter').textContent = (srsCurrentIndex + 1) + ' / ' + srsQueue.length;
+
+            // Показать следующий интервал на кнопке «Знаю»
+            var nextInterval = card ? Math.round(card.interval * card.easeFactor) : 7;
+            document.getElementById('srsKnowDays').textContent = '+' + nextInterval + ' дней';
+
+            document.getElementById('srsFlashcard').classList.remove('flipped');
+            document.getElementById('srsAnswerButtons').classList.add('hidden');
+        }
+
+        function flipSrsCard() {
+            document.getElementById('srsFlashcard').classList.toggle('flipped');
+            document.getElementById('srsAnswerButtons').classList.remove('hidden');
+        }
+
+        function handleSrsAnswer(quality) {
+            var word = srsQueue[srsCurrentIndex];
+            sm2Update(word, quality);
+
+            state.srsDoneToday++;
+            saveState();
+
+            var icon, text, msg;
+            var card = state.srsData[word];
+            if(quality === 5) {
+                icon = '✅'; text = 'Отлично!';
+                msg = 'Повторить через ' + card.interval + ' дн.';
+            } else if(quality === 3) {
+                icon = '🟡'; text = 'Неплохо';
+                msg = 'Повторить через ' + card.interval + ' дн.';
+            } else {
+                icon = '❌'; text = 'Забыл';
+                msg = 'Повторить завтра';
+            }
+
+            showFeedback(icon, text, msg);
+            srsCurrentIndex++;
+            updateSrsStats();
+
+            setTimeout(showSrsCard, 1500);
+        }
+
+        // === ВИКТОРИНА ===
+        function initQuiz() {
+            state.quizQueue = [];
+            state.quizScore = 0;
+            state.quizCorrect = 0;
+
+            // Только выученные слова
+            var pool = state.learnedWords.slice();
+
+            if(pool.length < 4) {
+                document.getElementById('quizWord').textContent = '—';
+                document.getElementById('quizOptionsContainer').innerHTML =
+                    '<div style="text-align:center; color:#888; padding:20px;">Сначала выучите хотя бы 4 слова в разделе «Карточки» 📝</div>';
+                document.getElementById('quizScore').textContent = 0;
+                document.getElementById('quizCorrect').textContent = 0;
+                return;
+            }
+
+            // Перемешать и взять 10
+            pool.sort(function() { return Math.random() - 0.5; });
+            state.quizQueue = pool.slice(0, 10);
+
+            document.getElementById('quizScore').textContent = 0;
+            document.getElementById('quizCorrect').textContent = 0;
             nextQuizQuestion();
         }
 
         function nextQuizQuestion() {
-            if (quizQueue.length === 0) {
-                showFeedback('🎉', 'Викторина завершена!', `Результат: ${quizCorrect} правильных`);
-                setTimeout(initializeQuiz, 2000);
+            if(state.quizQueue.length === 0) {
+                showFeedback('🎉', 'Викторина завершена!', 'Ваш результат: ' + state.quizCorrect + '/10');
+                setTimeout(initQuiz, 2000);
                 return;
             }
-
-            const word = quizQueue.shift();
-            const correctTranslation = translationsDB[word.toLowerCase()] || 'Перевод';
-            const options = getRandomTranslations(word, correctTranslation);
-
-            document.getElementById('quizQuestion').textContent = word;
-            const optionsEl = document.getElementById('quizOptions');
             
-            let htmlContent = '';
-            for (var k = 0; k < options.length; k++) {
-                const opt = options[k];
-                const isCorrect = (opt === correctTranslation) ? 'true' : 'false';
-                htmlContent += `<div class="quiz-option" data-correct="${isCorrect}">${opt}</div>`;
-            }
-            optionsEl.innerHTML = htmlContent;
-        }
-
-        function getRandomTranslations(word, correctTrans) {
-            const wordLower = word.toLowerCase();
-            let result = [];
+            var word = state.quizQueue.shift();
+            var correct = TRANSLATIONS[word.toLowerCase()] || word;
+            var options = generateQuizOptions(word, correct);
             
-            for (const key in translationsDB) {
-                if (key !== wordLower && result.length < 3) {
-                    result.push(translationsDB[key]);
-                }
-            }
-
-            while (result.length < 3) {
-                const keys = Object.keys(translationsDB);
-                result.push(translationsDB[keys[Math.floor(Math.random() * keys.length)]]);
-            }
-
-            result = result.slice(0, 3);
-            result.push(correctTrans);
+            document.getElementById('quizWord').textContent = word;
             
-            for (let n = result.length - 1; n > 0; n--) {
-                const m = Math.floor(Math.random() * (n + 1));
-                const temp = result[n];
-                result[n] = result[m];                result[m] = temp;
+            var html = '';
+            for(var i = 0; i < options.length; i++) {
+                html += '<div class="quiz-option" data-correct="' + correct + '" id="qopt-' + i + '">' + options[i] + '</div>';
             }
-
-            return result;
+            
+            document.getElementById('quizOptionsContainer').innerHTML = html;
         }
 
-        function updateQuizUI() {
-            document.getElementById('quizScore').textContent = quizScore;
-            document.getElementById('quizCorrect').textContent = quizCorrect;
-        }
-
-        function generateExampleSentence(word) {
-            const templates = [
-                `I want to ${word}.`,
-                `Do you ${word}?`,
-                `I always ${word}.`,
-                `It is easy to ${word}.`
-            ];
-            return templates[Math.floor(Math.random() * templates.length)];
-        }
-
-        function showFeedback(icon, text, message) {
-            const overlay = document.getElementById('feedbackOverlay');
-            document.getElementById('feedbackIcon').textContent = icon;
-            document.getElementById('feedbackText').textContent = text;
-            document.getElementById('feedbackMessage').textContent = message;
-            overlay.classList.add('show');
-            setTimeout(function() { overlay.classList.remove('show'); }, 1500);
-        }
-
-        function markSession(timeOfDay) {
-            const today = new Date().toISOString().split('T')[0];
-            const loadedProgress = loadProgress();
-
-            let sessionExists = false;
-            for (var s = 0; s < loadedProgress.dailySessions.length; s++) {
-                if (loadedProgress.dailySessions[s] === today) {
-                    sessionExists = true;
-                    break;
+        function generateQuizOptions(correctWord, correctTrans) {
+            var options = [correctTrans];
+            var keys = Object.keys(TRANSLATIONS);
+            
+            while(options.length < 4 && keys.length > 0) {
+                var idx = Math.floor(Math.random() * keys.length);
+                var randomTrans = TRANSLATIONS[keys[idx]];
+                if(randomTrans && options.indexOf(randomTrans) === -1) {
+                    options.push(randomTrans);
                 }
+                keys.splice(idx, 1);
+            }            
+            while(options.length < 4) {
+                options.push('???');
             }
-
-            if (!sessionExists) {
-                loadedProgress.dailySessions.push(today);
-                saveProgress(loadedProgress);
-                updateStats(loadedProgress);
+            
+            // Перемешать
+            for(var i = options.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = options[i];
+                options[i] = options[j];
+                options[j] = temp;
             }
-
-            document.getElementById('btnMorning').style.background = '';
-            document.getElementById('btnMorning').style.color = '';            document.getElementById('btnAfternoon').style.background = '';
-            document.getElementById('btnAfternoon').style.color = '';
-            document.getElementById('btnEvening').style.background = '';
-            document.getElementById('btnEvening').style.color = '';
-
-            if (timeOfDay === 'morning') {
-                document.getElementById('btnMorning').style.background = '#667eea';
-                document.getElementById('btnMorning').style.color = 'white';
-            }
-            if (timeOfDay === 'afternoon') {
-                document.getElementById('btnAfternoon').style.background = '#667eea';
-                document.getElementById('btnAfternoon').style.color = 'white';
-            }
-            if (timeOfDay === 'evening') {
-                document.getElementById('btnEvening').style.background = '#667eea';
-                document.getElementById('btnEvening').style.color = 'white';
-            }
-
-            showFeedback('✓', timeOfDay.toUpperCase() + ' завершен!', 'Отличная работа!');
+            
+            return options;
         }
 
-        function loadProgress() {
-            const stored = localStorage.getItem('englishMasteryProgress');
-            if (stored) {
-                return JSON.parse(stored);
-            }
-
-            const defaultProgress = {
-                learnedWords: [],
-                levelProgress: {},
-                dailySessions: [],
-                streakDays: [],
-                lastVisitDate: null,
-                totalQuestions: 0,
-                correctAnswers: 0,
-                currentLevel: 1,
-                studyHistory: {}
-            };
-
-            for (let l = 1; l <= 5; l++) {
-                defaultProgress.levelProgress[l] = { mastered: [], learning: [] };
-            }
-
-            for (let w = 0; w < WORDS.length; w++) {
-                const word = WORDS[w];
-                const idx = w;
-                const level = Math.min(5, Math.ceil((idx + 1) / 200));
-                if (level === 1) {
-                    defaultProgress.levelProgress[1].mastered.push(word);
-                } else {                    defaultProgress.levelProgress[level].learning.push(word);
-                }
-            }
-
-            const date = new Date();
-            const todayStr = date.toISOString().split('T')[0];
-            defaultProgress.lastVisitDate = todayStr;
-            defaultProgress.dailySessions.push(todayStr);
-            defaultProgress.streakDays.push(todayStr);
-
-            return defaultProgress;
+        function handleQuizOptionClick(e) {
+            if(!e.target.classList.contains('quiz-option')) return;
+            var correct = e.target.dataset.correct;
+            var selected = e.target.textContent;
+            checkAnswer(e.target, selected, correct);
         }
 
-        function saveProgress(prog) {
-            localStorage.setItem('englishMasteryProgress', JSON.stringify(prog));
+        function checkAnswer(element, selected, correct) {
+            if(!correct) return;
+            
+            var opts = element.parentNode.children;
+            for(var i = 0; i < opts.length; i++) {
+                opts[i].style.pointerEvents = 'none';
+            }
+            
+            if(selected === correct) {
+                element.classList.add('correct');
+                state.quizCorrect++;
+                state.quizScore += 10;
+                showFeedback('✅', 'Верно!', '+10 очков');
+            } else {
+                element.classList.add('wrong');
+                showFeedback('❌', 'Ошибка', 'Правильный ответ: ' + correct);
+            }
+            
+            document.getElementById('quizScore').textContent = state.quizScore;
+            document.getElementById('quizCorrect').textContent = state.quizCorrect;
+            
+            setTimeout(nextQuizQuestion, 1500);
         }
 
-        function checkStreak(prog) {
-            const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-            if (!prog.lastVisitDate) {
-                prog.lastVisitDate = todayStr;
-                for (var st = 0; st < prog.streakDays.length; st++) {
-                    if (prog.streakDays[st] === todayStr) {
-                        return prog.streakDays.length;
-                    }
-                }
-                prog.streakDays.push(todayStr);
-                return 1;
-            }
-
-            if (prog.lastVisitDate === todayStr) {
-                return prog.streakDays.length;
-            }
-
-            if (prog.lastVisitDate === yesterdayStr) {
-                let dayFound = false;
-                for (var d = 0; d < prog.streakDays.length; d++) {
-                    if (prog.streakDays[d] === todayStr) {
-                        dayFound = true;
-                        break;
-                    }
-                }
-                if (!dayFound) {
-                    prog.streakDays.push(todayStr);
-                }                return prog.streakDays.length;
-            }
-
-            prog.streakDays = [todayStr];
-            return 1;
+        // === ПРОГРЕСС И СОХРАНЕНИЕ ===
+        function saveState() {
+            localStorage.setItem('englishMasteryProgress', JSON.stringify(state));
         }
-
-        function updateStats(prog) {
-            document.getElementById('totalLearned').textContent = prog.learnedWords.length;
-            document.getElementById('currentLevel').textContent = prog.currentLevel;
-            document.getElementById('accuracyRate').textContent = Math.round((prog.correctAnswers / Math.max(1, prog.totalQuestions) * 100)) + '%';
-
-            const uniqueDaysSet = {};
-            for (var ud = 0; ud < prog.streakDays.length; ud++) {
-                uniqueDaysSet[prog.streakDays[ud]] = true;
-            }
-            const uniqueDaysCount = Object.keys(uniqueDaysSet).length;
-            document.getElementById('streakCount').textContent = uniqueDaysCount;
-
-            const dailySessionsSet = {};
-            for (var ds = 0; ds < prog.dailySessions.length; ds++) {
-                dailySessionsSet[prog.dailySessions[ds]] = true;
-            }
-            const sessionCount = Math.min(3, Object.keys(dailySessionsSet).length);
-            document.getElementById('dailyProgress').textContent = `📅 Сегодня: ${sessionCount}/3 сессии`;
-            document.getElementById('dailyProgressFill').style.width = (sessionCount / 3 * 100) + '%';
-        }
-
-        function generateWeekCalendar(prog) {
-            const calendarEl = document.getElementById('weekCalendar');
-            const days = ['ВС','ПН','ВТ','СР','ЧТ','ПТ','СБ'];
-            const today = new Date();
-
-            let html = '';
-            for (let c = 6; c >= 0; c--) {
-                const date = new Date();
-                date.setDate(date.getDate() - c);
-                const dateStr = date.toISOString().split('T')[0];
-                const isToday = dateStr === today.toISOString().split('T')[0];
+        function loadState() {
+            var stored = localStorage.getItem('englishMasteryProgress');
+            if(stored) {
+                var loaded = JSON.parse(stored);
+                Object.assign(state, loaded);
                 
-                let hasSession = false;
-                for (var hs = 0; hs < prog.dailySessions.length; hs++) {
-                    if (prog.dailySessions[hs] === dateStr) {
-                        hasSession = true;
-                        break;
-                    }
+                // Восстановить текущий уровень
+                if(state.currentLevel) {
+                    document.getElementById('levelSelect').value = state.currentLevel;
                 }
-
-                html += `<div class="day-cell ${hasSession ? 'learned' : ''} ${isToday ? 'today' : ''}" title="${dateStr}">${days[date.getDay()]}</div>`;
-            }            calendarEl.innerHTML = html;
-        }
-
-        function resetProgress() {
-            if (confirm('Вы уверены? Весь прогресс будет сброшен!')) {
-                localStorage.removeItem('englishMasteryProgress');
-                location.reload();
             }
+            // Добавить все выученные слова в SM-2 если ещё не добавлены
+            state.learnedWords.forEach(function(w) { srsAddWord(w); });
         }
 
-        window.addEventListener('load', initApp);
+        function checkStreak() {
+            var today = new Date().toISOString().split('T')[0];
+            var yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            var yesterdayStr = yesterday.toISOString().split('T')[0];
+            
+            // Проверка последнего посещения
+            if(!state.lastVisitDate) {
+                state.lastVisitDate = today;
+                state.streakDays.push(today);
+            } else if(state.lastVisitDate === yesterdayStr) {
+                if(state.streakDays.indexOf(today) === -1) {
+                    state.streakDays.push(today);
+                }
+            } else if(state.lastVisitDate !== today) {
+                state.streakDays = [today];
+            }
+            
+            state.lastVisitDate = today;
+            
+            // Ежедневная сессия
+            if(state.dailySessions.indexOf(today) === -1) {
+                state.dailySessions.push(today);
+            }
+            
+            // Сохранить и обновить
+            saveState();
+            updateStats();
+        }
+
+        function updateStats() {
+            var uniqueDays = new Set(state.streakDays).size;
+            
+            document.getElementById('learnedCount').textContent = state.learnedWords.length;
+            document.getElementById('streakCount').textContent = uniqueDays;
+            
+            var sessions = new Set(state.dailySessions).size;            sessions = Math.min(3, sessions);
+            
+            document.getElementById('dailyProgressText').textContent = 'Сегодня: ' + sessions + '/3 сессии';
+            document.getElementById('dailyProgressFill').style.width = (sessions / 3 * 100) + '%';
+
+            // SM-2 badge
+            var dueCount = getSrsDueWords().length;
+            document.getElementById('levelSrsBadge').textContent = dueCount;
+        }
+
+        // === ОБРАТНАЯ СВЯЗЬ ===
+        function showFeedback(icon, text, msg) {
+            document.getElementById('fbIcon').textContent = icon;
+            document.getElementById('fbText').textContent = text;
+            document.getElementById('fbMsg').textContent = msg;
+            
+            var overlay = document.getElementById('feedbackOverlay');
+            overlay.classList.add('show');
+            
+            setTimeout(hideFeedback, 1500);
+        }
+
+        function hideFeedback() {
+            document.getElementById('feedbackOverlay').classList.remove('show');
+        }
     </script>
 </body>
 </html>
